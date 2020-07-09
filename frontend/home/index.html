@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
 
   <!-- Link Styles -->
-  <link rel="stylesheet" href="static/styles.css">
+  <link rel="stylesheet" href="/static/styles.css">
 
   <!-- Jquery Autocomplete -->
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
@@ -114,7 +114,7 @@
           </div>
         </div>
 
-        <div class="col-sm-2 offset-sm-10">
+        <div class="col-sm-12">
           <button v-if="!isLoading" v-on:click="searchCity()" type="button" class="btn btn-primary">Buscar</button>
 
           <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
@@ -129,7 +129,7 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="card">
-            <img src="static/img/sao_paulo.jpg" class="card-img-top" alt="Sao Paulo">
+            <img src="/static/img/sao_paulo.jpg" class="card-img-top" alt="Sao Paulo">
             <div class="card-body">
               <h3 class="card-title">{{ city.name }}</h3>
               <p class="card-text"><b>Habitantes:</b> {{ city.amountPeople}}</p>
@@ -169,7 +169,7 @@
   <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
   <!-- Script.js -->
-  <script src="static/scripts.js"></script>
+  <script src="/static/scripts.js"></script>
 </body>
 
 </html>

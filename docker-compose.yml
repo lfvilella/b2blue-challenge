@@ -1,0 +1,37 @@
+version: '3.7'
+services:
+
+  backend:
+    build: backend
+    ports:
+      - "${BACKEND_HOST_PORT}8000"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    command: ${RUNSERVER:-uvicorn backend.app.api:app --host 0.0.0.0}
+    networks:
+      - backend-network
+    restart: ${DOCKER_RESTART:-no}
+
+  proxy:
+    build: proxy
+    ports:
+      - "${PROXY_HOST_PORT}80"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    links:
+      - backend:backend_api
+    networks:
+      - backend-network
+      - nginx-gateway
+    restart: ${DOCKER_RESTART:-no}
+
+networks:
+  backend-network:
+  nginx-gateway:
+      external:
+          name: nginx-gateway
