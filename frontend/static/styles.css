@@ -1,0 +1,24 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color: #f3f3f3;
+  }
+
+  ul li a {
+    padding: 15px 0 !important;
+    font-size: 15pt;
+  }
+
+  .nav-link {
+    color: #ffffff !important;
+  }
+
+  .container {
+    margin-top: 15px;
+    padding-bottom: 20px;
+  }
+
+  .search-city{
+    margin-top: 90px;
+  }
