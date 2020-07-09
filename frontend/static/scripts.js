@@ -6,7 +6,7 @@ var app = new Vue({
     isLoading: false,
     city: {
       name: 'São Paulo',
-      amountPeople: '12 180 000',
+      amountPeople: '12.180.000',
       avarageIncome: 1946.00,
       country: 'Brasil',
       state: 'SP',
