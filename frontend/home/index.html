@@ -110,12 +110,12 @@
         <div class="col-sm-12">
           <div class="input-group mb-3">
             <input type="search" id="city-autocomplete" class="form-control" placeholder="Nome da Cidade"
-              aria-label="Cidade" aria-describedby="basic-addon1">
+              aria-label="Cidade" aria-describedby="basic-addon1" v-model="search">
           </div>
         </div>
 
         <div class="col-sm-12">
-          <button v-if="!isLoading" v-on:click="searchCity()" type="button" class="btn btn-primary">Buscar</button>
+          <button v-if="!isLoading" v-on:click="searchCity(search)" type="button" class="btn btn-primary">Buscar</button>
 
           <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -128,15 +128,26 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
-          <div class="card">
-            <img src="/static/img/sao_paulo.jpg" class="card-img-top" alt="Sao Paulo">
-            <div class="card-body">
-              <h3 class="card-title">{{ city.name }}</h3>
-              <p class="card-text"><b>Habitantes:</b> {{ city.amountPeople}}</p>
-              <p class="card-text"><b>Renda Média:</b> R$ {{ city.avarageIncome }}</p>
-              <p class="card-text"><b>País:</b> {{ city.country }}</p>
-              <p class="card-text"><b>Estado:</b> {{ city.state }}</p>
-              <p class="card-text"><b>Fundação:</b> {{ city.foundationDate }}</p>
+          <div class="accordion" id="accordionExample" v-for="city in cityList">
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                  <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                    data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    {{ city.name }}
+                  </button>
+                </h2>
+              </div>
+
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                  <p>População: {{ city.population_count }}</p>
+                  <p>Renda Média: {{ city.avarageIncome }}</p>
+                  <p>País: {{ city.country }}</p>
+                  <p>Estado: {{ city.state }}</p>
+                  <p>Data de Fundação: {{ city.foundationDate }}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

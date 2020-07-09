@@ -2,25 +2,54 @@ moment.locale(this.locale);
 var app = new Vue({
   el: '#app',
   data: {
-    locale: '',
+    locale: 'pt-br',
     isLoading: false,
-    city: {
-      name: 'São Paulo',
-      amountPeople: '12.180.000',
-      avarageIncome: 1946.00,
-      country: 'Brasil',
-      state: 'SP',
-      foundationDate: moment('09/07/1822').format('L'),
-    }
+    cityData: {
+      "name": "",
+      "population_count": 0,
+      "avarageIncome": 0,
+      "country": "",
+      "state": "",
+      "foundationDate": "",
+    },
+    cityList: [],
+    search: "",
   },
   methods: {
     changeLocale: function (locale) {
       this.locale = locale;
     },
 
-    searchCity: function(){
-        this.isLoading = true;
-    }
+    searchCity: function (search) {
+      this.isLoading = true;
+      this.getCity(search)
+    },
+
+    getCity: function (search) {
+      const params = {
+        name: search,
+      }
+      axios.get('/api/v.1/city', { params })
+        .then((response) => {
+          this.cityList = response.data.map(
+            row => ({
+              name: row.name,
+              population_count: row.population_count,
+              avarageIncome: row.avarageIncome,
+              country: row.country,
+              state: row.state,
+              foundationDate: moment(row.foundationDate).format('L'),
+              id: row.id,
+            })
+          );
+          this.isLoading = false;
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.isLoading = false;
+        });
+    },
   }
 })
 
