@@ -15,5 +15,10 @@ body {
   }
 
   .container {
-    margin-top: 50px;
+    margin-top: 15px;
+    padding-bottom: 20px;
+  }
+
+  .search-city{
+    margin-top: 90px;
   }

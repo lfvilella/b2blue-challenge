@@ -29,7 +29,7 @@
         <a class="nav-link active" href="#"><b>Cidades</b> <i class="fas fa-globe-americas"></i></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+        <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal">
           <i class="fas fa-plus"></i>
         </a>
 
@@ -45,8 +45,35 @@
                 </button>
               </div>
               <div class="modal-body">
-                <input type="text" class="form-control" placeholder="Noma da Cidade" aria-label="Cidade"
-                  aria-describedby="basic-addon1">
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Noma da Cidade" aria-label="Cidade"
+                    aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                  <input type="number" min="0" step="1" class="form-control" placeholder="Quantidade de Habitantes" aria-label="Cidade"
+                    aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                  <input type="number" class="form-control" placeholder="Renda Média" aria-label="Cidade"
+                    aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="País" aria-label="Cidade"
+                    aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Estado" aria-label="Cidade"
+                    aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                  <input type="date" class="form-control" placeholder="Data de Fundação" aria-label="Cidade"
+                    aria-describedby="basic-addon1">
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -84,8 +111,12 @@
           <div class="card">
             <img src="static/img/sao_paulo.jpg" class="card-img-top" alt="Sao Paulo">
             <div class="card-body">
-              <h5 class="card-title">{{ city.name }}</h5>
-              <p class="card-text">{{ city.description }}</p>
+              <h3 class="card-title">{{ city.name }}</h3>
+              <p class="card-text"><b>Habitantes:</b> {{ city.amountPeople}}</p>
+              <p class="card-text"><b>Renda Média:</b> {{ city.avarageIncome }}</p>
+              <p class="card-text"><b>País:</b> {{ city.country }}</p>
+              <p class="card-text"><b>Estado:</b> {{ city.state }}</p>
+              <p class="card-text"><b>Fundação:</b> {{ city.foundationDate }}</p>
             </div>
           </div>
         </div>
@@ -119,7 +150,12 @@
       data: {
         city: {
           name: 'São Paulo',
-          description: 'São Paulo is a municipality in the Southeast Region of Brazil. The metropolis is an alpha global city and the most populous city in Brazil, the Americas, the Western Hemisphere and the Southern Hemisphere, besides being the largest Portuguese-speaking city in the world.'}
+          amountPeople: '12 180 000',
+          avarageIncome: '1946',
+          country: 'Brazil',
+          state: 'SP',
+          foundationDate: '07/09/1822',
+        }
       }
     })
   </script>
