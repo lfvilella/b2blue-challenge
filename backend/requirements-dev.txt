@@ -1,0 +1,4 @@
+-r requirements.txt
+ipython==7.15.0
+black==19.10b0
+flake8==3.7.9
