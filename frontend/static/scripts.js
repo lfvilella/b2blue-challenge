@@ -16,6 +16,10 @@ var app = new Vue({
   methods: {
     changeLocale: function (locale) {
       this.locale = locale;
+    },
+
+    searchCity: function(){
+        this.isLoading = true;
     }
   }
 })
