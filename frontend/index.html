@@ -29,8 +29,20 @@
   <div id="app">
     <ul class="nav bg-dark nav-pills nav-fill">
       <li class="nav-item">
-        <a class="nav-link active" href="#"><b>Cidades</b> <i class="fas fa-globe-americas"></i></a>
+        <a class="nav-link active" href="#"><b>Cidades</b></a>
       </li>
+
+      <li class="nav-item">
+        <div class="dropdown">
+          <a type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+            style="color: white;"><i class="fas fa-globe"></i></a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('pt-bt')">Português</a>
+            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('en-us')">English</a>
+          </div>
+        </div>
+      </li>
+
       <li class="nav-item">
         <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal">
           <i class="fas fa-plus"></i>
@@ -159,85 +171,6 @@
 
   <!-- Script.js -->
   <script src="static/scripts.js"></script>
-
-  <script>
-    moment.locale();
-    var app = new Vue({
-      el: '#app',
-      data: {
-        isLoading: false,
-        city: {
-          name: 'São Paulo',
-          amountPeople: '12 180 000',
-          avarageIncome: 1946.00,
-          country: 'Brasil',
-          state: 'SP',
-          foundationDate: moment('09/07/1822').format('L'),
-        }
-      }
-    })
-
-
-    $(function () {
-      var states = [
-        "Alabama",
-        "Alaska",
-        "Arizona",
-        "Arkansas",
-        "California",
-        "Colorado",
-        "Connecticut",
-        "Delaware",
-        "Florida",
-        "Georgia",
-        "Hawaii",
-        "Idaho",
-        "Illnois",
-        "Indiana",
-        "Iowa",
-        "Kansas",
-        "Kentucky",
-        "Louisiana",
-        "Maine",
-        "Maryland",
-        "Massachusetts",
-        "Michigan",
-        "Minnesota",
-        "Mississippi",
-        "Missouri",
-        "Montana",
-        "Nebraska",
-        "Nevada",
-        "New Hampshire",
-        "New Jersey",
-        "New Mexico",
-        "New York",
-        "North Carolina",
-        "North Dakota",
-        "Ohio",
-        "Oklahoma",
-        "Oregon",
-        "Pennsylvania",
-        "Rhode Island",
-        "South Carolina",
-        "South Dakota",
-        "Tennessee",
-        "Texas",
-        "Utah",
-        "Vermont",
-        "Virginia",
-        "Washington",
-        "West Virginia",
-        "Wisconsin",
-        "Wyoming"
-      ];
-
-      $('#city-autocomplete').autocomplete({
-        source: states
-      });
-    });
-
-  </script>
 </body>
 
 </html>
