@@ -19,6 +19,9 @@
   <!-- Link Styles -->
   <link rel="stylesheet" href="static/styles.css">
 
+  <!-- Jquery Autocomplete -->
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
   <title>Cidades</title>
 </head>
 
@@ -51,8 +54,8 @@
                 </div>
 
                 <div class="input-group mb-3">
-                  <input type="number" min="0" step="1" class="form-control" placeholder="Quantidade de Habitantes" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                  <input type="number" min="0" step="1" class="form-control" placeholder="Quantidade de Habitantes"
+                    aria-label="Cidade" aria-describedby="basic-addon1">
                 </div>
 
                 <div class="input-group mb-3">
@@ -94,13 +97,18 @@
 
         <div class="col-sm-12">
           <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Noma da Cidade" aria-label="Cidade"
-              aria-describedby="basic-addon1">
+            <input type="search" id="city-autocomplete" class="form-control" placeholder="Nome da Cidade"
+              aria-label="Cidade" aria-describedby="basic-addon1">
           </div>
         </div>
 
         <div class="col-sm-2 offset-sm-10">
-          <button type="button" class="btn btn-primary">Buscar</button>
+          <button v-if="!isLoading" type="button" class="btn btn-primary">Buscar</button>
+
+          <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Buscando...
+          </button>
         </div>
       </div>
     </div>
@@ -125,6 +133,7 @@
   </div>
 
 
+
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -144,6 +153,10 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
+  <!-- Jquery Autocomplete -->
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
   <!-- Script.js -->
   <script src="static/scripts.js"></script>
 
@@ -152,6 +165,7 @@
     var app = new Vue({
       el: '#app',
       data: {
+        isLoading: false,
         city: {
           name: 'São Paulo',
           amountPeople: '12 180 000',
@@ -162,6 +176,67 @@
         }
       }
     })
+
+
+    $(function () {
+      var states = [
+        "Alabama",
+        "Alaska",
+        "Arizona",
+        "Arkansas",
+        "California",
+        "Colorado",
+        "Connecticut",
+        "Delaware",
+        "Florida",
+        "Georgia",
+        "Hawaii",
+        "Idaho",
+        "Illnois",
+        "Indiana",
+        "Iowa",
+        "Kansas",
+        "Kentucky",
+        "Louisiana",
+        "Maine",
+        "Maryland",
+        "Massachusetts",
+        "Michigan",
+        "Minnesota",
+        "Mississippi",
+        "Missouri",
+        "Montana",
+        "Nebraska",
+        "Nevada",
+        "New Hampshire",
+        "New Jersey",
+        "New Mexico",
+        "New York",
+        "North Carolina",
+        "North Dakota",
+        "Ohio",
+        "Oklahoma",
+        "Oregon",
+        "Pennsylvania",
+        "Rhode Island",
+        "South Carolina",
+        "South Dakota",
+        "Tennessee",
+        "Texas",
+        "Utah",
+        "Vermont",
+        "Virginia",
+        "Washington",
+        "West Virginia",
+        "Wisconsin",
+        "Wyoming"
+      ];
+
+      $('#city-autocomplete').autocomplete({
+        source: states
+      });
+    });
+
   </script>
 </body>
 
