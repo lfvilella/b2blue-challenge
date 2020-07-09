@@ -113,7 +113,7 @@
             <div class="card-body">
               <h3 class="card-title">{{ city.name }}</h3>
               <p class="card-text"><b>Habitantes:</b> {{ city.amountPeople}}</p>
-              <p class="card-text"><b>Renda Média:</b> {{ city.avarageIncome }}</p>
+              <p class="card-text"><b>Renda Média:</b> R$ {{ city.avarageIncome }}</p>
               <p class="card-text"><b>País:</b> {{ city.country }}</p>
               <p class="card-text"><b>Estado:</b> {{ city.state }}</p>
               <p class="card-text"><b>Fundação:</b> {{ city.foundationDate }}</p>
@@ -137,6 +137,9 @@
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
     crossorigin="anonymous"></script>
 
+  <!-- VueJS Locale -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/pt-br.min.js"></script>
   <!-- VueJS -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -145,16 +148,17 @@
   <script src="static/scripts.js"></script>
 
   <script>
+    moment.locale();
     var app = new Vue({
       el: '#app',
       data: {
         city: {
           name: 'São Paulo',
           amountPeople: '12 180 000',
-          avarageIncome: '1946',
-          country: 'Brazil',
+          avarageIncome: 1946.00,
+          country: 'Brasil',
           state: 'SP',
-          foundationDate: '07/09/1822',
+          foundationDate: moment('09/07/1822').format('L'),
         }
       }
     })
