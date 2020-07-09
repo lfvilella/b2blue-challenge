@@ -1,15 +1,17 @@
-moment.locale(this.locale);
 var app = new Vue({
   el: '#app',
+  created: function () {
+    this.changeLocale(this.locale);
+  },
   data: {
     locale: 'pt-br',
     isLoading: false,
     cityData: {
-      "name": "",
-      "population_count": 0,
-      "avarageIncome": 0,
-      "country": "",
-      "state": "",
+      "name": "Fartura",
+      "populationCount": '16000',
+      "avarageIncome": '1000',
+      "country": "BR",
+      "state": "SP",
       "foundationDate": "",
     },
     cityList: [],
@@ -18,14 +20,11 @@ var app = new Vue({
   methods: {
     changeLocale: function (locale) {
       this.locale = locale;
+      moment.locale(locale);
     },
 
     searchCity: function (search) {
       this.isLoading = true;
-      this.getCity(search)
-    },
-
-    getCity: function (search) {
       const params = {
         name: search,
       }
@@ -50,64 +49,17 @@ var app = new Vue({
           this.isLoading = false;
         });
     },
+
+    createCity: function (cityData) {
+      axios.post('/api/v.1/city', cityData)
+        .then((response) => {
+          this.searchCity(cityData.name);
+          this.search = cityData.name;
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        });
+    },
   }
 })
-
-$(function () {
-  var states = [
-    "Alabama",
-    "Alaska",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "Florida",
-    "Georgia",
-    "Hawaii",
-    "Idaho",
-    "Illnois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    "New Mexico",
-    "New York",
-    "North Carolina",
-    "North Dakota",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Pennsylvania",
-    "Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming"
-  ];
-
-  $('#city-autocomplete').autocomplete({
-    source: states
-  });
-});

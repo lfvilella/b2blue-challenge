@@ -62,37 +62,37 @@
               <div class="modal-body">
                 <div class="input-group mb-3">
                   <input type="text" class="form-control" placeholder="Noma da Cidade" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                    aria-describedby="basic-addon1" v-model="cityData.name">
                 </div>
 
                 <div class="input-group mb-3">
                   <input type="number" min="0" step="1" class="form-control" placeholder="Quantidade de Habitantes"
-                    aria-label="Cidade" aria-describedby="basic-addon1">
+                    aria-label="Cidade" aria-describedby="basic-addon1" v-model="cityData.populationCount">
                 </div>
 
                 <div class="input-group mb-3">
                   <input type="number" class="form-control" placeholder="Renda Média" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                    aria-describedby="basic-addon1" v-model="cityData.avarageIncome">
                 </div>
 
                 <div class="input-group mb-3">
                   <input type="text" class="form-control" placeholder="País" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                    aria-describedby="basic-addon1" v-model="cityData.country">
                 </div>
 
                 <div class="input-group mb-3">
                   <input type="text" class="form-control" placeholder="Estado" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                    aria-describedby="basic-addon1" v-model="cityData.state">
                 </div>
 
                 <div class="input-group mb-3">
                   <input type="date" class="form-control" placeholder="Data de Fundação" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                    aria-describedby="basic-addon1" v-model="cityData.foundationDate">
                 </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary">Criar</button>
+                <button type="button" class="btn btn-primary" v-on:click="createCity(cityData)">Criar</button>
               </div>
             </div>
           </div>
@@ -109,13 +109,14 @@
 
         <div class="col-sm-12">
           <div class="input-group mb-3">
-            <input type="search" id="city-autocomplete" class="form-control" placeholder="Nome da Cidade"
+            <input type="search" class="form-control" placeholder="Nome da Cidade"
               aria-label="Cidade" aria-describedby="basic-addon1" v-model="search">
           </div>
         </div>
 
         <div class="col-sm-12">
-          <button v-if="!isLoading" v-on:click="searchCity(search)" type="button" class="btn btn-primary">Buscar</button>
+          <button v-if="!isLoading" v-on:click="searchCity(search)" type="button"
+            class="btn btn-primary">Buscar</button>
 
           <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -128,25 +129,17 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
-          <div class="accordion" id="accordionExample" v-for="city in cityList">
-            <div class="card">
-              <div class="card-header" id="headingOne">
-                <h2 class="mb-0">
-                  <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                    data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    {{ city.name }}
-                  </button>
-                </h2>
-              </div>
-
-              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                <div class="card-body">
-                  <p>População: {{ city.population_count }}</p>
-                  <p>Renda Média: {{ city.avarageIncome }}</p>
-                  <p>País: {{ city.country }}</p>
-                  <p>Estado: {{ city.state }}</p>
-                  <p>Data de Fundação: {{ city.foundationDate }}</p>
+          <div class="overflow-auto" style="height: 60vh;">
+            <div class="list-group" v-for="city in cityList">
+              <div class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{{ city.name }}</h5>
                 </div>
+                <p class="mb-1">População: {{ city.population_count }}</p>
+                <p class="mb-1">Renda Média: {{ city.avarageIncome }}</p>
+                <p class="mb-1">País: {{ city.country }}</p>
+                <p class="mb-1">Estado: {{ city.state }}</p>
+                <p class="mb-1">Fundada em: {{ city.foundationDate }}</p>
               </div>
             </div>
           </div>
