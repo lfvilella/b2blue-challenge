@@ -15,9 +15,7 @@ class ValidationError(DataAccessException):
 class DoesNotExisit(DataAccessException):
     pass
 
-
-service_cache = cache.get_cache_manager()
-
+service_cache = cache.get_cache()
 
 class CityService:
     _db: sqlalchemy.orm.Session
@@ -46,14 +44,18 @@ class CityService:
         self._db.commit()
         self._db.flush()
 
+        self.cached_filter_city.invalidate_all()
+
         return city
 
     def filter_city(self, name: str) -> typing.List[models.City]:
+        print('aquiuiquiquqiuq')
+        return []
         query = self._db.query(models.City).filter(
             models.City.name.contains(name)
         )
         return query.all()
 
-    @service_cache.cache("cached_filter_city", expire=30)
+    @service_cache.cache()
     def cached_filter_city(self, name):
         return self.filter_city(name)

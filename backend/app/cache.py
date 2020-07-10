@@ -1,11 +1,11 @@
-from beaker.cache import CacheManager
-from beaker.util import parse_cache_config_options
+import pickle
 
-cache_opts = {
-    "cache.type": "dbm",
-    "cache.data_dir": "./tmp/cache",
-}
+from redis import StrictRedis
+from redis_cache import RedisCache
 
 
-def get_cache_manager():
-    return CacheManager(**parse_cache_config_options(cache_opts))
+client = StrictRedis(host="redis_host", decode_responses=True)
+
+
+def get_cache():
+    return RedisCache(redis_client=client, serializer=pickle.dumps, deserializer=pickle.loads)

@@ -7,6 +7,10 @@ services:
       - "${BACKEND_HOST_PORT}8000"
     volumes:
       - ./:/app
+    depends_on:
+      - redis
+    links:
+      - redis:redis_host
     working_dir: /app
     stdin_open: true
     tty: true
@@ -14,6 +18,13 @@ services:
     networks:
       - backend-network
     restart: ${DOCKER_RESTART:-no}
+
+  redis:
+    image: redis:5
+    ports:
+      - "6379"
+    networks:
+      - backend-network
 
   proxy:
     build: proxy

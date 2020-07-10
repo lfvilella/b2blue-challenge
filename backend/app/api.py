@@ -56,4 +56,4 @@ def filter_city(
     name: str, db: sqlalchemy.orm.Session = fastapi.Depends(get_db),
 ):
     service = services.CityService(db)
-    return service.filter_city(name=name)
+    return service.cached_filter_city(name=name)
