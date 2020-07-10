@@ -4,31 +4,39 @@ import sqlalchemy.orm
 from . import models, schemas, cache
 
 
-class DataAccessException(Exception):
+class ServiceException(Exception):
     pass
 
 
-class ValidationError(DataAccessException):
+class ValidationError(ServiceException):
     pass
 
 
-class DoesNotExisit(DataAccessException):
+class DoesNotExist(ServiceException):
     pass
 
-service_cache = cache.get_cache()
+
+_cache = cache.get_cache()
+
 
 class CityService:
+
     _db: sqlalchemy.orm.Session
 
     def __init__(self, db: sqlalchemy.orm.Session):
         self._db = db
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state.pop("_db")  # do not pickle _db session
+        return state
 
     def get_city_by_name(
         self, name: str, raise_error: bool = True
     ) -> models.City:
         db_city = self._db.query(models.City).filter_by(name=name).first()
         if not db_city and raise_error:
-            raise DoesNotExisit("City does not exist")
+            raise DoesNotExist("City does not exist")
 
         return db_city
 
@@ -49,13 +57,11 @@ class CityService:
         return city
 
     def filter_city(self, name: str) -> typing.List[models.City]:
-        print('aquiuiquiquqiuq')
-        return []
         query = self._db.query(models.City).filter(
             models.City.name.contains(name)
         )
         return query.all()
 
-    @service_cache.cache()
+    @_cache.cache(ttl=60)
     def cached_filter_city(self, name):
         return self.filter_city(name)

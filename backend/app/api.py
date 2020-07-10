@@ -21,16 +21,16 @@ def get_db():
         db.close()
 
 
-@app.exception_handler(services.DataAccessException)
+@app.exception_handler(services.ServiceException)
 def handle_services_error(
-    request: fastapi.Request, exception: services.DataAccessException
+    request: fastapi.Request, exception: services.ServiceException
 ):
     if isinstance(exception, services.ValidationError):
         return fastapi.responses.JSONResponse(
             status_code=400, content={"detail": str(exception)}
         )
 
-    if isinstance(exception, services.DoesNotExisit):
+    if isinstance(exception, services.DoesNotExist):
         return fastapi.responses.JSONResponse(
             status_code=404, content={"detail": str(exception)}
         )
