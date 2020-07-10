@@ -109,15 +109,19 @@
 
         <div class="col-sm-12">
           <div class="input-group mb-3">
-            <input type="search" class="form-control" placeholder="Nome da Cidade"
-              aria-label="Cidade" aria-describedby="basic-addon1" v-model="search">
+            <input
+              type="search"
+              class="form-control"
+              placeholder="Nome da Cidade"
+              aria-label="Cidade"
+              aria-describedby="basic-addon1"
+              v-model="search"
+              @input="debouncedSearchCity(search)"
+            >
           </div>
         </div>
 
         <div class="col-sm-12">
-          <button v-if="!isLoading" v-on:click="searchCity(search)" type="button"
-            class="btn btn-primary">Buscar</button>
-
           <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             Buscando...
@@ -167,10 +171,7 @@
   <!-- VueJS -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
-  <!-- Jquery Autocomplete -->
-  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
 
   <!-- Script.js -->
   <script src="/static/scripts.js"></script>

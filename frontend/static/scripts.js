@@ -50,6 +50,8 @@ var app = new Vue({
         });
     },
 
+    debouncedSearchCity: _.debounce(function(search) {this.searchCity(search)}, 500),
+
     createCity: function (cityData) {
       axios.post('/api/v.1/city', cityData)
         .then((response) => {
