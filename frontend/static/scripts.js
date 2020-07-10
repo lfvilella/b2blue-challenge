@@ -5,13 +5,13 @@ var app = new Vue({
   },
   data: {
     locale: 'pt-br',
-    isSearchLoading: false,
+    isLoading: false,
     cityData: {
-      "name": "Fartura",
-      "populationCount": '16000',
-      "avarageIncome": '1000',
-      "country": "BR",
-      "state": "SP",
+      "name": "",
+      "populationCount": '',
+      "avarageIncome": '',
+      "country": "",
+      "state": "",
       "foundationDate": "",
     },
     cityList: [],
@@ -21,11 +21,11 @@ var app = new Vue({
   methods: {
     cleanAllData: function () {
       this.cityData = {
-        "name": "Fartura",
-        "populationCount": '16000',
-        "avarageIncome": '1000',
-        "country": "BR",
-        "state": "SP",
+        "name": "",
+        "populationCount": '',
+        "avarageIncome": '',
+        "country": "",
+        "state": "",
         "foundationDate": "",
       };
       this.errorCreateCity = '';
@@ -38,10 +38,14 @@ var app = new Vue({
     },
 
     searchCity: function (search) {
-      this.isSearchLoading = true;
+      this.isLoading = true;
       const params = {
         name: search,
       }
+      if (search === "") {
+        this.isLoading = false;
+        return this.cityList = [];
+      };
       axios.get('/api/v.1/city', { params })
         .then((response) => {
           this.cityList = response.data.map(
@@ -55,44 +59,44 @@ var app = new Vue({
               id: row.id,
             })
           );
-          this.isSearchLoading = false;
+          this.isLoading = false;
           console.log(response);
         })
         .catch((error) => {
           console.log(error);
-          this.isSearchLoading = false;
+          this.isLoading = false;
         });
     },
 
     debouncedSearchCity: _.debounce(function (search) { this.searchCity(search) }, 500),
 
     createCity: function (cityData) {
-      if (this.cityData.name === ""){
-        this.errorCreateCity = 'Campo "Nome" está vazio.';
+      if (this.cityData.name === "") {
+        this.errorCreateCity = 'Campo "Nome da Cidade" está vazio.';
         // this.setLoadingState(false);
         return;
       }
-      if (this.cityData.population_count === ""){
+      if (this.cityData.populationCount === "") {
         this.errorCreateCity = 'Campo "População" está vazio.';
         // this.setLoadingState(false);
         return;
       }
-      if (this.cityData.avarageIncome === ""){
+      if (this.cityData.avarageIncome === "") {
         this.errorCreateCity = 'Campo "Renda Média" está vazio.';
         // this.setLoadingState(false);
         return;
       }
-      if (this.cityData.country === ""){
+      if (this.cityData.country === "") {
         this.errorCreateCity = 'Campo "País" está vazio.';
         // this.setLoadingState(false);
         return;
       }
-      if (this.cityData.state === ""){
+      if (this.cityData.state === "") {
         this.errorCreateCity = 'Campo "Estado" está vazio.';
         // this.setLoadingState(false);
         return;
       }
-      if (this.cityData.foundationDate === ""){
+      if (this.cityData.foundationDate === "") {
         this.errorCreateCity = 'Campo "Fudando em" está vazio.';
         // this.setLoadingState(false);
         return;
@@ -101,6 +105,7 @@ var app = new Vue({
         .then((response) => {
           this.searchCity(cityData.name);
           this.search = cityData.name;
+          this.cleanAllData();
           console.log(response);
         })
         .catch((error) => {

@@ -61,7 +61,7 @@
               </div>
               <div class="modal-body">
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" placeholder="Noma da Cidade" aria-label="Cidade"
+                  <input type="text" class="form-control" placeholder="Nome da Cidade" aria-label="Cidade"
                     aria-describedby="basic-addon1" v-model="cityData.name">
                 </div>
 
@@ -85,15 +85,23 @@
                     aria-describedby="basic-addon1" v-model="cityData.state">
                 </div>
 
+                <h6 class="text-left">Fundado em:</h6>
                 <div class="input-group mb-3">
                   <input type="date" class="form-control" placeholder="Data de Fundação" aria-label="Cidade"
                     aria-describedby="basic-addon1" v-model="cityData.foundationDate">
                 </div>
               </div>
-              {{errorCreateCity}}
+              <div v-if="errorCreateCity" class="alert alert-danger" role="alert">
+                {{ errorCreateCity }}
+              </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary" v-on:click="createCity(cityData)">Criar</button>
+                <button v-if="!isLoading" type="button" class="btn btn-primary" v-on:click="createCity(cityData)">
+                  Criar</button>
+                <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Criando...
+                </button>
               </div>
             </div>
           </div>
@@ -110,23 +118,16 @@
 
         <div class="col-sm-12">
           <div class="input-group mb-3">
-            <button v-if="!isSearchLoading" class="btn btn-primary">
+            <button v-if="!isLoading" class="btn btn-primary" v-on:click="searchCity(search)">
               <i class="fas fa-search"></i>
             </button>
 
-            <button v-if="isSearchLoading" class="btn btn-primary" type="button" disabled>
+            <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             </button>
 
-            <input
-              type="search"
-              class="form-control"
-              placeholder="Nome da Cidade"
-              aria-label="Cidade"
-              aria-describedby="basic-addon1"
-              v-model="search"
-              @input="debouncedSearchCity(search)"
-            >
+            <input type="search" class="form-control" placeholder="Nome da Cidade" aria-label="Cidade"
+              aria-describedby="basic-addon1" v-model="search" @input="debouncedSearchCity(search)">
           </div>
         </div>
       </div>
