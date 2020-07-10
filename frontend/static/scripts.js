@@ -5,7 +5,7 @@ var app = new Vue({
   },
   data: {
     locale: 'pt-br',
-    isLoading: false,
+    isSearchLoading: false,
     cityData: {
       "name": "Fartura",
       "populationCount": '16000',
@@ -16,15 +16,29 @@ var app = new Vue({
     },
     cityList: [],
     search: "",
+    errorCreateCity: '',
   },
   methods: {
+    cleanAllData: function () {
+      this.cityData = {
+        "name": "Fartura",
+        "populationCount": '16000',
+        "avarageIncome": '1000',
+        "country": "BR",
+        "state": "SP",
+        "foundationDate": "",
+      };
+      this.errorCreateCity = '';
+      return;
+    },
+
     changeLocale: function (locale) {
       this.locale = locale;
       moment.locale(locale);
     },
 
     searchCity: function (search) {
-      this.isLoading = true;
+      this.isSearchLoading = true;
       const params = {
         name: search,
       }
@@ -41,18 +55,48 @@ var app = new Vue({
               id: row.id,
             })
           );
-          this.isLoading = false;
+          this.isSearchLoading = false;
           console.log(response);
         })
         .catch((error) => {
           console.log(error);
-          this.isLoading = false;
+          this.isSearchLoading = false;
         });
     },
 
-    debouncedSearchCity: _.debounce(function(search) {this.searchCity(search)}, 500),
+    debouncedSearchCity: _.debounce(function (search) { this.searchCity(search) }, 500),
 
     createCity: function (cityData) {
+      if (this.cityData.name === ""){
+        this.errorCreateCity = 'Campo "Nome" está vazio.';
+        // this.setLoadingState(false);
+        return;
+      }
+      if (this.cityData.population_count === ""){
+        this.errorCreateCity = 'Campo "População" está vazio.';
+        // this.setLoadingState(false);
+        return;
+      }
+      if (this.cityData.avarageIncome === ""){
+        this.errorCreateCity = 'Campo "Renda Média" está vazio.';
+        // this.setLoadingState(false);
+        return;
+      }
+      if (this.cityData.country === ""){
+        this.errorCreateCity = 'Campo "País" está vazio.';
+        // this.setLoadingState(false);
+        return;
+      }
+      if (this.cityData.state === ""){
+        this.errorCreateCity = 'Campo "Estado" está vazio.';
+        // this.setLoadingState(false);
+        return;
+      }
+      if (this.cityData.foundationDate === ""){
+        this.errorCreateCity = 'Campo "Fudando em" está vazio.';
+        // this.setLoadingState(false);
+        return;
+      }
       axios.post('/api/v.1/city', cityData)
         .then((response) => {
           this.searchCity(cityData.name);

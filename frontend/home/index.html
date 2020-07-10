@@ -90,6 +90,7 @@
                     aria-describedby="basic-addon1" v-model="cityData.foundationDate">
                 </div>
               </div>
+              {{errorCreateCity}}
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                 <button type="button" class="btn btn-primary" v-on:click="createCity(cityData)">Criar</button>
@@ -109,6 +110,14 @@
 
         <div class="col-sm-12">
           <div class="input-group mb-3">
+            <button v-if="!isSearchLoading" class="btn btn-primary">
+              <i class="fas fa-search"></i>
+            </button>
+
+            <button v-if="isSearchLoading" class="btn btn-primary" type="button" disabled>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
+
             <input
               type="search"
               class="form-control"
@@ -120,20 +129,13 @@
             >
           </div>
         </div>
-
-        <div class="col-sm-12">
-          <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Buscando...
-          </button>
-        </div>
       </div>
     </div>
 
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
-          <div class="overflow-auto" style="height: 60vh;">
+          <div class="overflow-auto" style="height: 68vh;">
             <div class="list-group" v-for="city in cityList">
               <div class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
