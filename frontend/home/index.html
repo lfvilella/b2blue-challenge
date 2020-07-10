@@ -29,7 +29,7 @@
   <div id="app">
     <ul class="nav bg-dark nav-pills nav-fill">
       <li class="nav-item">
-        <a class="nav-link active" href="#"><b>Cidades</b></a>
+        <a class="nav-link active" href="#"><b>{{ $t("navBar.title") }}</b></a>
       </li>
 
       <li class="nav-item">
@@ -37,8 +37,8 @@
           <a type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
             style="color: white;"><i class="fas fa-globe"></i></a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('pt-bt')">Português</a>
-            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('en-us')">English</a>
+            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('pt-BR')">Português</a>
+            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('en-US')">English</a>
           </div>
         </div>
       </li>
@@ -130,6 +130,10 @@
               aria-describedby="basic-addon1" v-model="search" @input="debouncedSearchCity(search)">
           </div>
         </div>
+
+        <div v-if="cityNotFound" class="col-sm-12 text-center">
+          <p>Nenhuma Cidade Encontrada.</p>
+        </div>
       </div>
     </div>
 
@@ -142,11 +146,11 @@
                 <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1">{{ city.name }}</h5>
                 </div>
-                <p class="mb-1">População: {{ city.population_count }}</p>
-                <p class="mb-1">Renda Média: {{ city.avarageIncome }}</p>
+                <p class="mb-1">População: {{ $n(city.populationCount) }}</p>
+                <p class="mb-1">Renda Média: {{ $n(city.avarageIncome) }}</p>
                 <p class="mb-1">País: {{ city.country }}</p>
                 <p class="mb-1">Estado: {{ city.state }}</p>
-                <p class="mb-1">Fundada em: {{ city.foundationDate }}</p>
+                <p class="mb-1">Fundada em: {{ $d(city.foundationDate) }}</p>
               </div>
             </div>
           </div>
@@ -175,6 +179,8 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
+  <!-- VueJS i18n -->
+  <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
 
   <!-- Script.js -->
   <script src="/static/scripts.js"></script>
