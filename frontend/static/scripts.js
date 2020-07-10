@@ -1,11 +1,23 @@
-
-
 const ptBR = {
   navBar: {
     title: 'Cidade',
   },
+  form: {
+    title: 'Criar Cidade',
+    name: 'Nome da Cidade',
+    population: 'Quantidade de Habitantes',
+    avarage: 'Renda Média',
+    country: 'País',
+    state: 'Estado',
+    foundation: 'Fundado em',
+    create: 'Criar',
+    creating: 'Criando',
+    close: 'Fechar',
+  },
   labels: {
-    serachCity: 'Buscar Cidade',
+    searchCity: 'Buscar Cidade',
+    population: 'População',
+    cityNotFound: 'Nenhuma Cidade Encontrada',
   }
 }
 
@@ -13,9 +25,23 @@ const enUS = {
   navBar: {
     title: 'City',
   },
+  form: {
+    title: 'Create a City',
+    name: "City's Name",
+    population: 'Number of Inhabitants',
+    avarage: 'Avarage Income',
+    country: 'Country',
+    state: 'State',
+    foundation: 'Founded on',
+    create: 'Create',
+    creating: 'Creating',
+    close: 'Close',
+  },
   labels: {
-    serachCity: 'Search a City',
-  }
+    searchCity: 'Search a City',
+    population: 'Population',
+    cityNotFound: 'City Not Found',
+  },
 }
 
 
@@ -30,6 +56,7 @@ var app = new Vue({
     }
   }),
   el: '#app',
+  delimiters: ["[[", "]]"],
   created: function () {
     this.changeLocale(this.$i18n.locale);
   },
@@ -68,12 +95,12 @@ var app = new Vue({
 
     searchCity: function (search) {
       this.cityNotFound = false;
-      this.isLoading = true;
+      this.setLoadingState(true);
       const params = {
         name: search,
       }
       if (search === "") {
-        this.isLoading = false;
+        this.setLoadingState(false);
         return this.cityList = [];
       };
       axios.get('/api/v.1/city', { params })
@@ -92,47 +119,51 @@ var app = new Vue({
           if (this.cityList.length === 0) {
             this.cityNotFound = true;
           }
-          this.isLoading = false;
+          this.setLoadingState(false);
           console.log(response);
         })
         .catch((error) => {
           console.log(error);
-          this.isLoading = false;
+          this.setLoadingState(false);
         });
     },
 
     debouncedSearchCity: _.debounce(function (search) { this.searchCity(search) }, 500),
 
+    setLoadingState: function (value) {
+      return this.isLoading = value;
+    },
+
     createCity: function (cityData) {
-      this.isLoading = true;
+      this.setLoadingState(true);
       if (this.cityData.name === "") {
         this.errorCreateCity = 'Campo "Nome da Cidade" está vazio.';
-        // this.setLoadingState(false);
+        this.setLoadingState(false);
         return;
       }
       if (this.cityData.populationCount === "") {
         this.errorCreateCity = 'Campo "População" está vazio.';
-        // this.setLoadingState(false);
+        this.setLoadingState(false);
         return;
       }
       if (this.cityData.avarageIncome === "") {
         this.errorCreateCity = 'Campo "Renda Média" está vazio.';
-        // this.setLoadingState(false);
+        this.setLoadingState(false);
         return;
       }
       if (this.cityData.country === "") {
         this.errorCreateCity = 'Campo "País" está vazio.';
-        // this.setLoadingState(false);
+        this.setLoadingState(false);
         return;
       }
       if (this.cityData.state === "") {
         this.errorCreateCity = 'Campo "Estado" está vazio.';
-        // this.setLoadingState(false);
+        this.setLoadingState(false);
         return;
       }
       if (this.cityData.foundationDate === "") {
         this.errorCreateCity = 'Campo "Fudando em" está vazio.';
-        // this.setLoadingState(false);
+        this.setLoadingState(false);
         return;
       }
       axios.post('/api/v.1/city', cityData)
@@ -140,11 +171,11 @@ var app = new Vue({
           this.searchCity(cityData.name);
           this.search = cityData.name;
           this.cleanAllData();
-          this.isLoading = false;
+          this.setLoadingState(false);
           console.log(response);
         })
         .catch((error) => {
-          this.isLoading = false;
+          this.setLoadingState(false);
           console.log(error.response.data);
         });
     },
