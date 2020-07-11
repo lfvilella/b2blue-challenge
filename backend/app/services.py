@@ -32,9 +32,12 @@ class CityService:
         return state
 
     def get_city_by_name(
-        self, name: str, raise_error: bool = True
+        self, name: str, state: str, raise_error: bool = True
     ) -> models.City:
-        db_city = self._db.query(models.City).filter_by(name=name).first()
+
+        db_city = self._db.query(models.City).filter_by(
+            id=models.City.generate_id(name=name, state=state)
+        ).first()
         if not db_city and raise_error:
             raise DoesNotExist("City does not exist")
 
@@ -42,11 +45,14 @@ class CityService:
 
     def create_city(self, city: schemas.CityInput,) -> models.City:
 
-        db_city = self.get_city_by_name(name=city.name, raise_error=False)
+        db_city = self.get_city_by_name(
+            name=city.name, state=city.state, raise_error=False
+        )
         if db_city:
             raise ValidationError("City already exist")
 
         city = models.City(**city.dict())
+        city.id = models.City.generate_id(name=city.name, state=city.state)
 
         self._db.add(city)
         self._db.commit()
