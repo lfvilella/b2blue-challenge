@@ -44,7 +44,7 @@
       </li>
 
       <li class="nav-item">
-        <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal">
+        <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal" v-on:click="setCitySuccessCreated(false)">
           <i class="fas fa-plus"></i>
         </a>
 
@@ -67,12 +67,12 @@
 
                 <div class="input-group mb-3">
                   <input type="number" min="0" step="1" class="form-control" :placeholder="[[ $t('form.population') ]]"
-                    aria-label="Populacao" aria-describedby="basic-addon1" v-model="cityData.populationCount">
+                    aria-label="Populacao" aria-describedby="basic-addon1" v-model="cityData.population_count">
                 </div>
 
                 <div class="input-group mb-3">
                   <input type="number" class="form-control" :placeholder="[[ $t('form.avarage') ]]" aria-label="Renda"
-                    aria-describedby="basic-addon1" v-model="cityData.avarageIncome">
+                    aria-describedby="basic-addon1" v-model="cityData.avarage_income">
                 </div>
 
                 <div class="input-group mb-3">
@@ -88,12 +88,17 @@
                 <h6 class="text-left">[[ $t('form.foundation') ]]:</h6>
                 <div class="input-group mb-3">
                   <input type="date" class="form-control" aria-label="Foundado"
-                    aria-describedby="basic-addon1" v-model="cityData.foundationDate">
+                    aria-describedby="basic-addon1" v-model="cityData.foundation_date">
                 </div>
               </div>
               <div v-if="errorCreateCity" class="alert alert-danger" role="alert">
                 [[ errorCreateCity ]]
               </div>
+
+              <div v-if="citySuccessCreated" class="alert alert-success" role="alert">
+                <p style="margin-bottom: 0px;">[[ $t('form.citySuccessCreated') ]]</p>
+              </div>
+
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">[[ $t('form.close') ]]</button>
                 <button v-if="!isLoading" type="button" class="btn btn-primary" v-on:click="createCity(cityData)">
@@ -146,11 +151,11 @@
                 <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1">[[ city.name ]]</h5>
                 </div>
-                <p class="mb-1">[[ $t("labels.population") ]]: [[ $n(city.populationCount) ]]</p>
-                <p class="mb-1">[[ $t("form.avarage") ]]: [[ $n(city.avarageIncome) ]]</p>
+                <p class="mb-1">[[ $t("labels.population") ]]: [[ $n(city.population_count) ]]</p>
+                <p class="mb-1">[[ $t("form.avarage") ]]: [[ $n(city.avarage_income) ]]</p>
                 <p class="mb-1">[[ $t("form.country") ]]: [[ city.country ]]</p>
                 <p class="mb-1">[[ $t("form.state") ]]: [[ city.state ]]</p>
-                <p class="mb-1">[[ $t("form.foundation") ]]: [[ $d(city.foundationDate) ]]</p>
+                <p class="mb-1">[[ $t("form.foundation") ]]: [[ $d(city.foundation_date) ]]</p>
               </div>
             </div>
           </div>

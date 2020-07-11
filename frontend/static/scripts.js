@@ -13,6 +13,7 @@ const ptBR = {
     create: 'Criar',
     creating: 'Criando',
     close: 'Fechar',
+    citySuccessCreated: 'A Cidade foi cadastrada com sucesso.',
   },
   labels: {
     searchCity: 'Buscar Cidade',
@@ -36,6 +37,7 @@ const enUS = {
     create: 'Create',
     creating: 'Creating',
     close: 'Close',
+    citySuccessCreated: 'The City was successfully registered.',
   },
   labels: {
     searchCity: 'Search a City',
@@ -64,26 +66,27 @@ var app = new Vue({
     isLoading: false,
     cityData: {
       "name": "",
-      "populationCount": '',
-      "avarageIncome": '',
+      "population_count": null,
+      "avarage_income": null,
       "country": "",
       "state": "",
-      "foundationDate": "",
+      "foundation_date": null,
     },
     cityList: [],
     search: "",
     cityNotFound: false,
     errorCreateCity: '',
+    citySuccessCreated: false,
   },
   methods: {
     cleanAllData: function () {
       this.cityData = {
         "name": "",
-        "populationCount": '',
-        "avarageIncome": '',
+        "population_count": null,
+        "avarage_income": null,
         "country": "",
         "state": "",
-        "foundationDate": "",
+        "foundation_date": null,
       };
       this.errorCreateCity = '';
       return;
@@ -109,10 +112,10 @@ var app = new Vue({
             row => ({
               name: row.name,
               population_count: row.population_count,
-              avarageIncome: row.avarageIncome,
+              avarage_income: row.avarage_income,
               country: row.country,
               state: row.state,
-              foundationDate: moment(row.foundationDate).toDate(),
+              foundation_date: moment(row.foundation_date).toDate(),
               id: row.id,
             })
           );
@@ -134,6 +137,10 @@ var app = new Vue({
       return this.isLoading = value;
     },
 
+    setCitySuccessCreated: function (value) {
+      return this.citySuccessCreated = value;
+    },
+
     createCity: function (cityData) {
       this.setLoadingState(true);
       if (this.cityData.name === "") {
@@ -141,12 +148,12 @@ var app = new Vue({
         this.setLoadingState(false);
         return;
       }
-      if (this.cityData.populationCount === "") {
+      if (this.cityData.population_count === "") {
         this.errorCreateCity = 'Campo "População" está vazio.';
         this.setLoadingState(false);
         return;
       }
-      if (this.cityData.avarageIncome === "") {
+      if (this.cityData.avarage_income === "") {
         this.errorCreateCity = 'Campo "Renda Média" está vazio.';
         this.setLoadingState(false);
         return;
@@ -161,17 +168,18 @@ var app = new Vue({
         this.setLoadingState(false);
         return;
       }
-      if (this.cityData.foundationDate === "") {
+      if (this.cityData.foundation_date === "") {
         this.errorCreateCity = 'Campo "Fudando em" está vazio.';
         this.setLoadingState(false);
         return;
       }
       axios.post('/api/v.1/city', cityData)
-        .then((response) => {
+      .then((response) => {
           this.searchCity(cityData.name);
           this.search = cityData.name;
           this.cleanAllData();
           this.setLoadingState(false);
+          this.setCitySuccessCreated(true)
           console.log(response);
         })
         .catch((error) => {
