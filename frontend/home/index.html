@@ -44,7 +44,7 @@
       </li>
 
       <li class="nav-item">
-        <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal" v-on:click="setCitySuccessCreated(false)">
+        <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal" v-on:click="cleanFormData()">
           <i class="fas fa-plus"></i>
         </a>
 
@@ -61,7 +61,7 @@
               </div>
               <div class="modal-body">
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" :placeholder="[[ $t('form.name') ]]" aria-label="Cidade"
+                  <input type="text" class="form-control" :placeholder="$t('form.name')" aria-label="Cidade"
                     aria-describedby="basic-addon1" v-model="cityData.name">
                 </div>
 
@@ -75,14 +75,11 @@
                     aria-describedby="basic-addon1" v-model="cityData.avarage_income">
                 </div>
 
+                <h6 class="text-left">[[ $t('form.state') ]]:</h6>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" :placeholder="[[ $t('form.country') ]]" aria-label="Pais"
-                    aria-describedby="basic-addon1" v-model="cityData.country">
-                </div>
-
-                <div class="input-group mb-3">
-                  <input type="text" class="form-control" :placeholder="[[ $t('form.state') ]]" aria-label="Estado"
-                    aria-describedby="basic-addon1" v-model="cityData.state">
+                    <select class="custom-select" v-model="cityData.state" >
+                      <option :value="state.sigla" v-for="state in states">[[ state.nome ]]</option>
+                    </select>
                 </div>
 
                 <h6 class="text-left">[[ $t('form.foundation') ]]:</h6>
@@ -91,8 +88,9 @@
                     aria-describedby="basic-addon1" v-model="cityData.foundation_date">
                 </div>
               </div>
-              <div v-if="errorCreateCity" class="alert alert-danger" role="alert">
-                [[ errorCreateCity ]]
+
+              <div v-if="formError" class="alert alert-danger" role="alert">
+                [[ formError ]]
               </div>
 
               <div v-if="citySuccessCreated" class="alert alert-success" role="alert">
@@ -153,7 +151,6 @@
                 </div>
                 <p class="mb-1">[[ $t("labels.population") ]]: [[ $n(city.population_count) ]]</p>
                 <p class="mb-1">[[ $t("form.avarage") ]]: [[ $n(city.avarage_income) ]]</p>
-                <p class="mb-1">[[ $t("form.country") ]]: [[ city.country ]]</p>
                 <p class="mb-1">[[ $t("form.state") ]]: [[ city.state ]]</p>
                 <p class="mb-1">[[ $t("form.foundation") ]]: [[ $d(city.foundation_date) ]]</p>
               </div>

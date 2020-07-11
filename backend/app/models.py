@@ -15,7 +15,6 @@ class City(Base):
     name = sqlalchemy.Column(sqlalchemy.String)
     population_count = sqlalchemy.Column(sqlalchemy.Integer)
     avarage_income = sqlalchemy.Column(sqlalchemy.Float)
-    country = sqlalchemy.Column(sqlalchemy.String)
     state = sqlalchemy.Column(sqlalchemy.String)
     foundation_date = sqlalchemy.Column(sqlalchemy.Date)
 

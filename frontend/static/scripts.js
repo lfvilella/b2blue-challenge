@@ -1,3 +1,34 @@
+const statesBR = [
+  { "nome": "Acre", "sigla": "AC" },
+  { "nome": "Alagoas", "sigla": "AL" },
+  { "nome": "Amapá", "sigla": "AP" },
+  { "nome": "Amazonas", "sigla": "AM" },
+  { "nome": "Bahia", "sigla": "BA" },
+  { "nome": "Ceará", "sigla": "CE" },
+  { "nome": "Distrito Federal", "sigla": "DF" },
+  { "nome": "Espírito Santo", "sigla": "ES" },
+  { "nome": "Goiás", "sigla": "GO" },
+  { "nome": "Maranhão", "sigla": "MA" },
+  { "nome": "Mato Grosso", "sigla": "MT" },
+  { "nome": "Mato Grosso do Sul", "sigla": "MS" },
+  { "nome": "Minas Gerais", "sigla": "MG" },
+  { "nome": "Pará", "sigla": "PA" },
+  { "nome": "Paraíba", "sigla": "PB" },
+  { "nome": "Paraná", "sigla": "PR" },
+  { "nome": "Pernambuco", "sigla": "PE" },
+  { "nome": "Piauí", "sigla": "PI" },
+  { "nome": "Rio de Janeiro", "sigla": "RJ" },
+  { "nome": "Rio Grande do Norte", "sigla": "RN" },
+  { "nome": "Rio Grande do Sul", "sigla": "RS" },
+  { "nome": "Rondônia", "sigla": "RO" },
+  { "nome": "Roraima", "sigla": "RR" },
+  { "nome": "Santa Catarina", "sigla": "SC" },
+  { "nome": "São Paulo", "sigla": "SP" },
+  { "nome": "Sergipe", "sigla": "SE" },
+  { "nome": "Tocantins", "sigla": "TO" }
+]
+
+
 const ptBR = {
   navBar: {
     title: 'Cidade',
@@ -7,13 +38,20 @@ const ptBR = {
     name: 'Nome da Cidade',
     population: 'Quantidade de Habitantes',
     avarage: 'Renda Média',
-    country: 'País',
     state: 'Estado',
     foundation: 'Fundado em',
     create: 'Criar',
     creating: 'Criando',
     close: 'Fechar',
     citySuccessCreated: 'A Cidade foi cadastrada com sucesso.',
+  },
+  formCityError: {
+    NoName: 'Campo "Nome" está vazio',
+    NoPopulation: 'Campo "População" está vazio',
+    NoAvarage: 'Campo "Renda Média" está vazio',
+    NoState: 'Campo "Estado" está vazio',
+    NoFoundation: 'Campo "Fundado em" está vazio',
+    AlredyExist: 'Cidade já está cadastrada',
   },
   labels: {
     searchCity: 'Buscar Cidade',
@@ -31,13 +69,20 @@ const enUS = {
     name: "City's Name",
     population: 'Number of Inhabitants',
     avarage: 'Avarage Income',
-    country: 'Country',
     state: 'State',
     foundation: 'Founded on',
     create: 'Create',
     creating: 'Creating',
     close: 'Close',
     citySuccessCreated: 'The City was successfully registered.',
+  },
+  formCityError: {
+    NoName: 'Field "name" is empity',
+    NoPopulation: 'Field "population" is empity',
+    NoAvarage: 'Field "Avarage Income" is empity',
+    NoState: 'Field "State" is empity',
+    NoFoundation: 'Field "Foundation" is empity',
+    AlredyExist: 'City alredy exists',
   },
   labels: {
     searchCity: 'Search a City',
@@ -63,35 +108,22 @@ var app = new Vue({
     this.changeLocale(this.$i18n.locale);
   },
   data: {
+    states: statesBR,
     isLoading: false,
+    formError: null,
     cityData: {
       "name": "",
       "population_count": null,
       "avarage_income": null,
-      "country": "",
       "state": "",
       "foundation_date": null,
     },
     cityList: [],
     search: "",
     cityNotFound: false,
-    errorCreateCity: '',
     citySuccessCreated: false,
   },
   methods: {
-    cleanAllData: function () {
-      this.cityData = {
-        "name": "",
-        "population_count": null,
-        "avarage_income": null,
-        "country": "",
-        "state": "",
-        "foundation_date": null,
-      };
-      this.errorCreateCity = '';
-      return;
-    },
-
     changeLocale: function (locale) {
       this.$i18n.locale = locale;
     },
@@ -113,7 +145,6 @@ var app = new Vue({
               name: row.name,
               population_count: row.population_count,
               avarage_income: row.avarage_income,
-              country: row.country,
               state: row.state,
               foundation_date: moment(row.foundation_date).toDate(),
               id: row.id,
@@ -137,54 +168,57 @@ var app = new Vue({
       return this.isLoading = value;
     },
 
-    setCitySuccessCreated: function (value) {
-      return this.citySuccessCreated = value;
+    cleanFormData: function () {
+      this.cityData = {
+        "name": "",
+        "population_count": null,
+        "avarage_income": null,
+        "state": "",
+        "foundation_date": null,
+      };
+      this.citySuccessCreated = false;
+      this.formError = null;
+      return;
     },
 
     createCity: function (cityData) {
+      this.setLoadingState(false);
+      if (!this.cityData.name) {
+        this.formError = this.$t('formCityError.NoName');
+        return;
+      }
+      if (!this.cityData.population_count) {
+        this.formError = this.$t('formCityError.NoPopulation');
+        return;
+      }
+      if (!this.cityData.avarage_income) {
+        this.formError = this.$t('formCityError.NoAvarage');
+        return;
+      }
+      if (!this.cityData.state) {
+        this.formError = this.$t('formCityError.NoState');
+        return;
+      }
+      if (!this.cityData.foundation_date) {
+        this.formError = this.$t('formCityError.NoFoundation');
+        return;
+      }
+
       this.setLoadingState(true);
-      if (this.cityData.name === "") {
-        this.errorCreateCity = 'Campo "Nome da Cidade" está vazio.';
-        this.setLoadingState(false);
-        return;
-      }
-      if (this.cityData.population_count === "") {
-        this.errorCreateCity = 'Campo "População" está vazio.';
-        this.setLoadingState(false);
-        return;
-      }
-      if (this.cityData.avarage_income === "") {
-        this.errorCreateCity = 'Campo "Renda Média" está vazio.';
-        this.setLoadingState(false);
-        return;
-      }
-      if (this.cityData.country === "") {
-        this.errorCreateCity = 'Campo "País" está vazio.';
-        this.setLoadingState(false);
-        return;
-      }
-      if (this.cityData.state === "") {
-        this.errorCreateCity = 'Campo "Estado" está vazio.';
-        this.setLoadingState(false);
-        return;
-      }
-      if (this.cityData.foundation_date === "") {
-        this.errorCreateCity = 'Campo "Fudando em" está vazio.';
-        this.setLoadingState(false);
-        return;
-      }
       axios.post('/api/v.1/city', cityData)
       .then((response) => {
           this.searchCity(cityData.name);
           this.search = cityData.name;
-          this.cleanAllData();
           this.setLoadingState(false);
-          this.setCitySuccessCreated(true)
-          console.log(response);
+          this.cleanFormData();
+          this.citySuccessCreated = true;
         })
         .catch((error) => {
           this.setLoadingState(false);
-          console.log(error.response.data);
+          if (error.response.status === 400) {
+            this.formError = this.$t('formCityError.AlredyExist')
+            return;
+          }
         });
     },
   }
