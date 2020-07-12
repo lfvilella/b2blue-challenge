@@ -30,11 +30,6 @@ def handle_services_error(
             status_code=400, content={"detail": str(exception)}
         )
 
-    if isinstance(exception, services.DoesNotExist):
-        return fastapi.responses.JSONResponse(
-            status_code=404, content={"detail": str(exception)}
-        )
-
     raise exception
 
 
