@@ -70,32 +70,46 @@ class TestCreateCity:
 
 @pytest.fixture
 def create_db_city(payload, session_maker):
-    session = session_maker()
+    def execute(name, state):
+        session = session_maker()
 
-    city = models.City(
-        id=models.City.generate_id(
-            name=payload["name"], state=payload["state"]
-        ),
-        name=payload["name"],
-        population_count=payload["population_count"],
-        avarage_income=payload["avarage_income"],
-        state=payload["state"],
-        foundation_date=datetime.date(2020, 7, 11),
-    )
+        city = models.City(
+            id=models.City.generate_id(name=name, state=state),
+            name=name,
+            population_count=payload["population_count"],
+            avarage_income=payload["avarage_income"],
+            state=state,
+            foundation_date=datetime.date(2020, 7, 11),
+        )
 
-    session.add(city)
-    session.commit()
+        session.add(city)
+        session.commit()
 
-    return city
+        return city
+
+    return execute
 
 
 @pytest.mark.usefixtures("use_db")
 class TestFilterCity:
-    def test_valid_name_returns_ok(self, create_db_city):
-        request = client.get(build_url(name="Fake"))
+    def test_when_city_matches_returns_ok(self, create_db_city):
+        create_db_city(name="Sao Paulo", state="SP")
+        create_db_city(name="Other", state="FakeState")
+        request = client.get(build_url(name="sAO"))
         assert request.status_code == 200
+        assert request.json() == [
+            {
+                "name": "Sao Paulo",
+                "population_count": 100,
+                "avarage_income": 90.73,
+                "state": "SP",
+                "foundation_date": "2020-07-11",
+                "id": "sp - saopaulo",
+            }
+        ]
 
-    def test_invalid_name_returns_empity_list(self, create_db_city):
+    def test_when_city_does_not_exist_returns_empity_list(
+        self, create_db_city
+    ):
         request = client.get(build_url(name="Zezinho"))
-        assert request.status_code == 200
         assert request.json() == []

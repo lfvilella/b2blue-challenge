@@ -29,5 +29,5 @@ jobs:
         flake8 .
     - name: Test with pytest
       run: |
-        docker network create nginx-gateway
-        docker-compose run backend /bin/bash -c pytest
+        make build
+        make test
