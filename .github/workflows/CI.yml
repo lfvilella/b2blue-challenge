@@ -22,19 +22,19 @@ jobs:
         docker network create nginx-gateway
         RUNSERVER=/bin/bash docker-compose up --build -d
 
-    # - name: Lint with flake8
-    #   run: |
-    #     docker-compose exec backend flake8 .
+    - name: Lint with flake8
+      run: |
+        $(docker-compose exec backend flake8 .)
 
     - name: Test with pytest
       run: |
-        docker-compose exec backend pytest --cov=./backend/app
+        $(docker-compose exec backend pytest --cov=./backend/app)
 
     - name: Coverage Report
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
-        docker-compose exec backend codecov --token="$CODECOV_TOKEN"
+        $(docker-compose exec backend codecov --token="$CODECOV_TOKEN")
 
     - name: Set down docker containers
       run: |
