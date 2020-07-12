@@ -34,6 +34,11 @@ services:
       - ./frontend:/app
     depends_on:
       - backend
+    environment:
+      VIRTUAL_HOST: b2blue.lfvilella.com
+      VIRTUAL_HOST_ALIAS: b2blue.lfvilella.com,www.b2blue.lfvilella.com
+      LETSENCRYPT_HOST: b2blue.lfvilella.com,www.b2blue.lfvilella.com
+      LETSENCRYPT_EMAIL: vilella.luisfelipe+b2blue.lfvilella.com@gmail.com
     links:
       - backend:backend_api
     networks:
