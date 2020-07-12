@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -8,7 +10,10 @@ from app import models
 client = TestClient(api.app)
 
 
-def build_url():
+def build_url(name = None):
+    if name:
+        return f"api/v.1/city?name={name}"
+
     return "api/v.1/city"
 
 
@@ -63,5 +68,36 @@ class TestCreateCity:
         assert response.json().get('detail') == 'Invalid Post'
 
 
+@pytest.fixture
+def create_db_city(payload, session_maker):
+    session = session_maker()
+
+    city = models.City(
+        id=models.City.generate_id(name=payload['name'], state=payload['state']),
+        name=payload['name'],
+        population_count=payload['population_count'],
+        avarage_income=payload['avarage_income'],
+        state=payload['state'],
+        foundation_date=datetime.date(2020, 7, 11),
+    )
+
+    session.add(city)
+    session.commit()
+
+    return city
+
+
+@pytest.mark.usefixtures("use_db")
 class TestFilterCity:
-    pass
+    def test_valid_name_returns_ok(self, create_db_city):
+        request = client.get(
+            build_url(name='Fake')
+        )
+        assert request.status_code == 200
+
+    def test_invalid_name_returns_empity_list(self, create_db_city):
+        request = client.get(
+            build_url(name='Zezinho')
+        )
+        assert request.status_code == 200
+        assert request.json() == []
