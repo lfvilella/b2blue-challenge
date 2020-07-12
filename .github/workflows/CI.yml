@@ -34,4 +34,4 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
-        RUNSERVER='codecov --token="$CODECOV_TOKEN"' docker-compose run -e CODECOV_TOKEN:$CODECOV_TOKEN --rm backend
+        RUNSERVER="codecov --token=$CODECOV_TOKEN" docker-compose run --rm backend
