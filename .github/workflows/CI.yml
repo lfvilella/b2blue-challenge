@@ -29,4 +29,5 @@ jobs:
         flake8 .
     - name: Test with pytest
       run: |
-        make build_and_test
+        docker network create nginx-gateway
+        RUNSERVER=pytest docker-compose rum --rm backend
