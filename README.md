@@ -34,6 +34,9 @@ Open API docs: http://localhost/api/v.1/docs
 ## Filtering Cities
 ![filter-city](https://user-images.githubusercontent.com/45940140/87258426-be3d5980-c479-11ea-937d-84af94d43408.gif)
 
+## i18n
+![internalization](https://user-images.githubusercontent.com/45940140/87258619-643d9380-c47b-11ea-98a4-31b7c81aba89.gif)
+
 
 # API Resources
 
