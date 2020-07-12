@@ -128,10 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Images
-frontend/static/img
-
 # Local
 sql_app.db
 
 tmp
+
+**/**/.vscode

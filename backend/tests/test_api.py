@@ -111,5 +111,26 @@ class TestFilterCity:
     def test_when_city_does_not_exist_returns_empity_list(
         self, create_db_city
     ):
-        request = client.get(build_url(name="Zezinho"))
+        request = client.get(build_url(name="anything"))
         assert request.json() == []
+
+    def test_use_cache_when_filtering(self, create_db_city):
+        create_db_city(name="City One", state="State")
+        r_1 = client.get(build_url(name="City"))
+
+        create_db_city(name="City Two", state="State")
+        r_2 = client.get(build_url(name="City"))
+
+        assert r_1.json() == r_2.json()
+
+    def test_when_creating_new_city_invalidate_existing_cache(
+        self, payload, create_db_city
+    ):
+        create_db_city(name="City One", state="State")
+        r_1 = client.get(build_url(name="City"))
+
+        payload["name"] = "City Two"
+        client.post(build_url(), json=payload)
+
+        r_2 = client.get(build_url(name="City"))
+        assert r_1.json() != r_2.json()
