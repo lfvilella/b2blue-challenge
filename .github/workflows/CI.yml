@@ -24,17 +24,17 @@ jobs:
 
     - name: Lint with flake8
       run: |
-        docker-compose exec backend /bin/bash -c flake8 .
+        docker-compose exec backend /bin/bash -c 'flake8 .'
 
     - name: Test with pytest
       run: |
-        docker-compose exec backend /bin/bash -c pytest --cov=./backend/app
+        docker-compose exec backend /bin/bash -c 'pytest --cov=./backend/app'
 
     - name: Coverage Report
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
-        docker-compose exec backend /bin/bash -c codecov --token="$CODECOV_TOKEN"
+        docker-compose exec backend /bin/bash -c 'codecov --token="$CODECOV_TOKEN"'
 
     - name: Set down docker containers
       run: |
