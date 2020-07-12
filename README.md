@@ -26,4 +26,10 @@ Open: http://localhost
 Open API docs: http://localhost/api/v.1/docs
 
 
-# API Resources
+# UI Resources
+
+## Creating City
+![create-city](https://user-images.githubusercontent.com/45940140/87258423-b8e00f00-c479-11ea-9c82-4c5dcd8e08e1.gif)
+
+## Filtering Cities
+![filter-city](https://user-images.githubusercontent.com/45940140/87258426-be3d5980-c479-11ea-937d-84af94d43408.gif)
