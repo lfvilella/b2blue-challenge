@@ -29,7 +29,7 @@
   <div id="app">
     <ul class="nav bg-dark nav-pills nav-fill">
       <li class="nav-item">
-        <a class="nav-link active" href="#"><b>Cidades</b></a>
+        <a class="nav-link active" href="#"><b>[[ $t("navBar.title") ]]</b></a>
       </li>
 
       <li class="nav-item">
@@ -37,14 +37,14 @@
           <a type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
             style="color: white;"><i class="fas fa-globe"></i></a>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('pt-bt')">Português</a>
-            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('en-us')">English</a>
+            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('pt-BR')">Português</a>
+            <a class="dropdown-item" style="margin-left: 10px;" v-on:click="changeLocale('en-US')">English</a>
           </div>
         </div>
       </li>
 
       <li class="nav-item">
-        <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal">
+        <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal" v-on:click="cleanFormData()">
           <i class="fas fa-plus"></i>
         </a>
 
@@ -54,45 +54,57 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Criar Cidade</h5>
+                <h5 class="modal-title" id="exampleModalLabel">[[ $t("form.title") ]]</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" placeholder="Noma da Cidade" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                  <input type="text" class="form-control" :placeholder="$t('form.name')" aria-label="Cidade"
+                    aria-describedby="basic-addon1" v-model="cityData.name">
                 </div>
 
                 <div class="input-group mb-3">
-                  <input type="number" min="0" step="1" class="form-control" placeholder="Quantidade de Habitantes"
-                    aria-label="Cidade" aria-describedby="basic-addon1">
+                  <input type="number" min="0" step="1" class="form-control" :placeholder="[[ $t('form.population') ]]"
+                    aria-label="Populacao" aria-describedby="basic-addon1" v-model="cityData.population_count">
                 </div>
 
                 <div class="input-group mb-3">
-                  <input type="number" class="form-control" placeholder="Renda Média" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                  <input type="number" class="form-control" :placeholder="[[ $t('form.avarage') ]]" aria-label="Renda"
+                    aria-describedby="basic-addon1" v-model="cityData.avarage_income">
                 </div>
 
+                <h6 class="text-left">[[ $t('form.state') ]]:</h6>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" placeholder="País" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                    <select class="custom-select" v-model="cityData.state" >
+                      <option :value="state.sigla" v-for="state in states">[[ state.nome ]]</option>
+                    </select>
                 </div>
 
+                <h6 class="text-left">[[ $t('form.foundation') ]]:</h6>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" placeholder="Estado" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
-                </div>
-
-                <div class="input-group mb-3">
-                  <input type="date" class="form-control" placeholder="Data de Fundação" aria-label="Cidade"
-                    aria-describedby="basic-addon1">
+                  <input type="date" class="form-control" aria-label="Foundado"
+                    aria-describedby="basic-addon1" v-model="cityData.foundation_date">
                 </div>
               </div>
+
+              <div v-if="formError" class="alert alert-danger" role="alert">
+                [[ formError ]]
+              </div>
+
+              <div v-if="citySuccessCreated" class="alert alert-success" role="alert">
+                <p style="margin-bottom: 0px;">[[ $t('form.citySuccessCreated') ]]</p>
+              </div>
+
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary">Criar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">[[ $t('form.close') ]]</button>
+                <button v-if="!isLoading" type="button" class="btn btn-primary" v-on:click="createCity(cityData)">
+                  [[ $t('form.create') ]]</button>
+                <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  [[ $t('form.creating') ]]...
+                </button>
               </div>
             </div>
           </div>
@@ -103,24 +115,27 @@
     <div class="container">
       <div class="row text-center">
         <div class="col-sm-12">
-          <div style="margin-bottom: 22px !important;" class="shadow p-3 mb-5 bg-white rounded"><b>Buscar Cidade</b>
+          <div style="margin-bottom: 22px !important;" class="shadow p-3 mb-5 bg-white rounded"><b>[[ $t("labels.searchCity") ]]</b>
           </div>
         </div>
 
         <div class="col-sm-12">
           <div class="input-group mb-3">
-            <input type="search" id="city-autocomplete" class="form-control" placeholder="Nome da Cidade"
-              aria-label="Cidade" aria-describedby="basic-addon1">
+            <button v-if="!isLoading" class="btn btn-primary" v-on:click="searchCity(search)">
+              <i class="fas fa-search"></i>
+            </button>
+
+            <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
+
+            <input type="search" class="form-control" :placeholder="[[ $t('form.name') ]]" aria-label="Cidade"
+              aria-describedby="basic-addon1" v-model="search" @input="debouncedSearchCity(search)">
           </div>
         </div>
 
-        <div class="col-sm-12">
-          <button v-if="!isLoading" v-on:click="searchCity()" type="button" class="btn btn-primary">Buscar</button>
-
-          <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Buscando...
-          </button>
+        <div v-if="cityNotFound" class="col-sm-12 text-center">
+          <p>[[ $t("labels.cityNotFound") ]].</p>
         </div>
       </div>
     </div>
@@ -128,15 +143,17 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
-          <div class="card">
-            <img src="/static/img/sao_paulo.jpg" class="card-img-top" alt="Sao Paulo">
-            <div class="card-body">
-              <h3 class="card-title">{{ city.name }}</h3>
-              <p class="card-text"><b>Habitantes:</b> {{ city.amountPeople}}</p>
-              <p class="card-text"><b>Renda Média:</b> R$ {{ city.avarageIncome }}</p>
-              <p class="card-text"><b>País:</b> {{ city.country }}</p>
-              <p class="card-text"><b>Estado:</b> {{ city.state }}</p>
-              <p class="card-text"><b>Fundação:</b> {{ city.foundationDate }}</p>
+          <div class="overflow-auto" style="height: 68vh;">
+            <div class="list-group" v-for="city in cityList">
+              <div class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">[[ city.name ]]</h5>
+                </div>
+                <p class="mb-1">[[ $t("labels.population") ]]: [[ $n(city.population_count) ]]</p>
+                <p class="mb-1">[[ $t("form.avarage") ]]: [[ $n(city.avarage_income) ]]</p>
+                <p class="mb-1">[[ $t("form.state") ]]: [[ city.state ]]</p>
+                <p class="mb-1">[[ $t("form.foundation") ]]: [[ $d(city.foundation_date) ]]</p>
+              </div>
             </div>
           </div>
         </div>
@@ -163,10 +180,9 @@
   <!-- VueJS -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
-  <!-- Jquery Autocomplete -->
-  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
+  <!-- VueJS i18n -->
+  <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
 
   <!-- Script.js -->
   <script src="/static/scripts.js"></script>

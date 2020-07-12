@@ -1,5 +1,3 @@
-import uuid
-
 import pydantic_sqlalchemy
 from . import models
 
@@ -10,4 +8,4 @@ CityInput = pydantic_sqlalchemy.sqlalchemy_to_pydantic(
 
 
 class City(CityInput):
-    id: uuid.UUID
+    id: str

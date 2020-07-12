@@ -133,3 +133,5 @@ frontend/static/img
 
 # Local
 sql_app.db
+
+tmp
