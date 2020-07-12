@@ -29,4 +29,5 @@ jobs:
         flake8 .
     - name: Test with pytest
       run: |
+        docker-compose up --build -d
         docker-compose exec backend pytest
