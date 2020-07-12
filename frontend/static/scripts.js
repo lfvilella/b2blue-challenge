@@ -52,6 +52,7 @@ const ptBR = {
     NoState: 'Campo "Estado" está vazio',
     NoFoundation: 'Campo "Fundado em" está vazio',
     AlredyExist: 'Cidade já está cadastrada',
+    NotInteger: 'O campo "Populacão" precisa ser um numero inteiro',
   },
   labels: {
     searchCity: 'Buscar Cidade',
@@ -83,6 +84,7 @@ const enUS = {
     NoState: 'Field "State" is empity',
     NoFoundation: 'Field "Foundation" is empity',
     AlredyExist: 'City alredy exists',
+    NotInteger: 'Field "Population" must be an integer',
   },
   labels: {
     searchCity: 'Search a City',
@@ -216,7 +218,13 @@ var app = new Vue({
         .catch((error) => {
           this.setLoadingState(false);
           if (error.response.status === 400) {
-            this.formError = this.$t('formCityError.AlredyExist')
+            this.formError = this.$t('formCityError.AlredyExist');
+            return;
+          }
+          if (error.response.status === 422) {
+            if (error.response.data.detail[0].type === "type_error.integer") {
+              this.formError = this.$t('formCityError.NotInteger');
+            }
             return;
           }
         });
