@@ -4,3 +4,26 @@
 
 # b2blue-challenge
 Selective process challenge
+
+Open: http://b2blue.lfvilella.com
+
+This is a simple API, being able to create and filter cities.
+
+Tech Stack:
+- Python
+- Fastapi
+- Sqlalchemy
+- Docker / docker-compose
+- VueJS
+
+## To run locally
+```
+$ make build
+```
+
+Open: http://localhost
+
+Open API docs: http://localhost/api/v.1/docs
+
+
+# API Resources
