@@ -16,34 +16,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r backend/requirements-dev.txt
-
-    - name: Lint with flake8
-      run: |
-        flake8 .
 
     - name: Setup docker containers
       run: |
         docker network create nginx-gateway
         RUNSERVER=/bin/bash docker-compose up --build -d
 
+    - name: Lint with flake8
+      run: |
+        docker-compose exec backend /bin/bash -c flake8 .
+
     - name: Test with pytest
       run: |
-        docker-compose exec backend pytest --cov=./backend/app
+        docker-compose exec backend /bin/bash -c pytest --cov=./backend/app
 
     - name: Coverage Report
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
-        docker-compose exec backend codecov --token="$CODECOV_TOKEN"
+        docker-compose exec backend /bin/bash -c codecov --token="$CODECOV_TOKEN"
 
     - name: Set down docker containers
       run: |
