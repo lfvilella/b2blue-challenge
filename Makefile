@@ -14,7 +14,7 @@ build: delete-container ## Build the container
 	@docker network create nginx-gateway || true
 	@docker-compose up --build -d
 
-build-and-test: build ## Build containers and run tests
+build_and_test: build ## Build containers and run tests
 	@docker-compose exec backend pytest
 
 test: start ## Run tests
