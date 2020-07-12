@@ -44,6 +44,8 @@ class CityService:
         return db_city
 
     def create_city(self, city: schemas.CityInput,) -> models.City:
+        if None in city.dict().values():
+            raise ValidationError("Invalid Post")
 
         db_city = self.get_city_by_name(
             name=city.name, state=city.state, raise_error=False
