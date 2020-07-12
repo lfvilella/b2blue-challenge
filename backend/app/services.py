@@ -35,9 +35,11 @@ class CityService:
         self, name: str, state: str, raise_error: bool = True
     ) -> models.City:
 
-        db_city = self._db.query(models.City).filter_by(
-            id=models.City.generate_id(name=name, state=state)
-        ).first()
+        db_city = (
+            self._db.query(models.City)
+            .filter_by(id=models.City.generate_id(name=name, state=state))
+            .first()
+        )
         if not db_city and raise_error:
             raise DoesNotExist("City does not exist")
 
