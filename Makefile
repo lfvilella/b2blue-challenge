@@ -11,6 +11,7 @@ validate_env:
 
 build: delete-container ## Build the container
 	@[ -f .env ] || cp template.env .env
+	@docker network create nginx-gateway || true
 	@docker-compose up --build -d
 
 test: start ## Run tests

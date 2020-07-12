@@ -27,3 +27,7 @@ jobs:
     - name: Lint with flake8
       run: |
         flake8 .
+    - name: Test with pytest
+      run: |
+        docker network create nginx-gateway
+        RUNSERVER=pytest docker-compose run --rm backend

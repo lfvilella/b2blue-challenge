@@ -7,10 +7,7 @@ class City(Base):
     __tablename__ = "cities"
 
     id = sqlalchemy.Column(
-        sqlalchemy.String,
-        primary_key=True,
-        unique=True,
-        index=True,
+        sqlalchemy.String, primary_key=True, unique=True, index=True,
     )
     name = sqlalchemy.Column(sqlalchemy.String)
     population_count = sqlalchemy.Column(sqlalchemy.Integer)
@@ -20,4 +17,4 @@ class City(Base):
 
     @staticmethod
     def generate_id(name, state):
-        return ''.join(state.split() + [' - '] + name.split()).lower()
+        return "".join(state.split() + [" - "] + name.split()).lower()
