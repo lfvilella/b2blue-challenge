@@ -7,7 +7,7 @@ Selective process challenge
 
 Open: http://b2blue.lfvilella.com
 
-This is a simple API, being able to create and filter cities.
+This is a simple UI / API to create and filter cities.
 
 Tech Stack:
 - Python
@@ -16,7 +16,7 @@ Tech Stack:
 - Docker / docker-compose
 - VueJS
 
-## To run locally
+## Running locally
 ```
 $ make build
 ```
