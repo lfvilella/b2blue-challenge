@@ -11,8 +11,11 @@ validate_env:
 
 build: delete-container ## Build the container
 	@[ -f .env ] || cp template.env .env
-	@docker network create nginx-gateway
+	@docker network create nginx-gateway || true
 	@docker-compose up --build -d
+
+build-and-test: build ## Build containers and run tests
+	@docker-compose exec backend pytest
 
 test: start ## Run tests
 	@docker-compose exec backend pytest

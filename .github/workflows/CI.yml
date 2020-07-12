@@ -29,5 +29,4 @@ jobs:
         flake8 .
     - name: Test with pytest
       run: |
-        make build
-        make test
+        make build_and_test
