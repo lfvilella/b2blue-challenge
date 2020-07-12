@@ -30,4 +30,4 @@ jobs:
     - name: Test with pytest
       run: |
         docker network create nginx-gateway
-        RUNSERVER=pytest docker-compose rum --rm backend
+        RUNSERVER=pytest docker-compose run --rm backend
