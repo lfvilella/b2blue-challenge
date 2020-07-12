@@ -33,3 +33,10 @@ Open API docs: http://localhost/api/v.1/docs
 
 ## Filtering Cities
 ![filter-city](https://user-images.githubusercontent.com/45940140/87258426-be3d5980-c479-11ea-937d-84af94d43408.gif)
+
+
+# API Resources
+
+http://localhost/api/v.1/docs
+
+![localhost_8000_api_v 1_docs](https://user-images.githubusercontent.com/45940140/87258604-45d79800-c47b-11ea-8387-a6a31603897e.png)
