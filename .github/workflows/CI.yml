@@ -20,22 +20,17 @@ jobs:
     - name: Setup docker containers
       run: |
         docker network create nginx-gateway
-        RUNSERVER=/bin/bash docker-compose up --build -d
 
     - name: Lint with flake8
       run: |
-        $(docker-compose exec backend flake8 .)
+        RUNSERVER='flake8 .' docker-compose run --rm backend
 
     - name: Test with pytest
       run: |
-        $(docker-compose exec backend pytest --cov=./backend/app)
+        RUNSERVER='pytest --cov=./backend/app' docker-compose run --rm backend
 
     - name: Coverage Report
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
-        $(docker-compose exec backend codecov --token="$CODECOV_TOKEN")
-
-    - name: Set down docker containers
-      run: |
-        docker-compose down
+        RUNSERVER='codecov --token="$CODECOV_TOKEN"' docker-compose run --rm backend
