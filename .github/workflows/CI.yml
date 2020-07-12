@@ -20,6 +20,7 @@ jobs:
     - name: Setup docker containers
       run: |
         docker network create nginx-gateway
+        docker-compose build
 
     - name: Lint with flake8
       run: |
