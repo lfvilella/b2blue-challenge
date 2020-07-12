@@ -110,7 +110,7 @@ class CityService:
         return query.all()
 
     @_cache.cache(ttl=60)
-    def cached_filter_city(self, name: str:
+    def cached_filter_city(self, name: str):
         """ Cached Filter City
 
         Cached version of filter_city it prevents from hitting
