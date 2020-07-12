@@ -30,4 +30,5 @@ jobs:
     - name: Test with pytest
       run: |
         docker-compose up --build -d
+        docker network create nginx-gateway
         docker-compose exec backend pytest
