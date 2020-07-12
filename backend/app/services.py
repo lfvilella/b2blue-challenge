@@ -12,10 +12,6 @@ class ValidationError(ServiceException):
     pass
 
 
-class DoesNotExist(ServiceException):
-    pass
-
-
 _cache = cache.get_cache()
 
 
@@ -40,8 +36,6 @@ class CityService:
             .filter_by(id=models.City.generate_id(name=name, state=state))
             .first()
         )
-        if not db_city and raise_error:
-            raise DoesNotExist("City does not exist")
 
         return db_city
 
