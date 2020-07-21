@@ -29,6 +29,7 @@ def payload():
 
 
 @pytest.mark.usefixtures("use_db")
+@pytest.mark.usefixtures("mock_google_recaptcha")
 class TestCreateCity:
     def test_when_valid_returns_created(self, payload):
         response = client.post(build_url(), json=payload)
@@ -91,6 +92,7 @@ def create_db_city(payload, session_maker):
 
 
 @pytest.mark.usefixtures("use_db")
+@pytest.mark.usefixtures("mock_google_recaptcha")
 class TestFilterCity:
     def test_when_city_matches_returns_ok(self, create_db_city):
         create_db_city(name="Sao Paulo", state="SP")
