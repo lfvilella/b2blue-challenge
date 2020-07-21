@@ -136,3 +136,14 @@ class TestFilterCity:
 
         r_2 = client.get(build_url(name="City"))
         assert r_1.json() != r_2.json()
+
+
+@pytest.mark.usefixtures("use_db")
+class TestRobot:
+    def test_returns_bad_request(self, payload):
+        response = client.post(build_url(), json=payload)
+        assert response.status_code == 400
+
+    def test_returns_bot_message(self, payload):
+        response = client.post(build_url(), json=payload)
+        assert response.json() == {'detail': 'Hi robot!'}
