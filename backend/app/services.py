@@ -16,7 +16,7 @@ from . import models, schemas, cache
 env = environs.Env()
 dotenv.load_dotenv()
 
-SECRET_KEY_RECAPTCHA = env("RECAPTCHA_SECRET_KEY", '')
+SECRET_KEY_RECAPTCHA = env("RECAPTCHA_SECRET_KEY", "")
 VALIDATE_RECAPTCHA = env.bool("VALIDATE_RECAPTCHA", True)
 
 
@@ -56,9 +56,7 @@ class CityService:
         state.pop("_db")  # do not pickle _db session
         return state
 
-    def get_city_by_id(
-        self, name: str, state: str
-    ) -> models.City:
+    def get_city_by_id(self, name: str, state: str) -> models.City:
         """ Get City By ID
 
         This method is used to get City
@@ -133,21 +131,23 @@ class CityService:
 
 
 class GoogleService:
-    _RECAPTCHA_SITEVERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify'
+    _RECAPTCHA_SITEVERIFY_URL = (
+        "https://www.google.com/recaptcha/api/siteverify"
+    )
 
     def validate_recaptcha(self, response_token: str) -> bool:
         if not VALIDATE_RECAPTCHA:
             return True
 
         data = {
-            'response': response_token,
-            'secret': SECRET_KEY_RECAPTCHA,
+            "response": response_token,
+            "secret": SECRET_KEY_RECAPTCHA,
         }
         response = requests.post(self._RECAPTCHA_SITEVERIFY_URL, data=data)
         if not response.ok:
             return False
 
-        if response.json().get('success') != True:
+        if response.json().get("success") is not True:
             return False
 
         return True

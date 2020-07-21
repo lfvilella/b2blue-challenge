@@ -10,8 +10,7 @@ models.Base.metadata.create_all(bind=database.engine)
 _VERSION = "/api/v.1"
 
 app = fastapi.FastAPI(
-    openapi_url=_VERSION + "/openapi.json",
-    docs_url=_VERSION + "/docs",
+    openapi_url=_VERSION + "/openapi.json", docs_url=_VERSION + "/docs",
 )
 
 
