@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 
 from app import api
 from app import models
+from app import services
 
 
 client = TestClient(api.app)
@@ -147,3 +148,8 @@ class TestRobot:
     def test_returns_bot_message(self, payload):
         response = client.post(build_url(), json=payload)
         assert response.json() == {'detail': 'Hi robot!'}
+
+
+class TestGoogleService:
+    def test_validate_recaptcha(self):
+        assert not services.GoogleService().validate_recaptcha('')

@@ -144,8 +144,6 @@ class GoogleService:
             "secret": SECRET_KEY_RECAPTCHA,
         }
         response = requests.post(self._RECAPTCHA_SITEVERIFY_URL, data=data)
-        if not response.ok:
-            return False
 
         if response.json().get("success") is not True:
             return False
