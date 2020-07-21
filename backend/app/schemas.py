@@ -7,7 +7,7 @@ CityBase = pydantic_sqlalchemy.sqlalchemy_to_pydantic(
 
 
 class CityInput(CityBase):
-    recaptcha: str
+    recaptcha: str = None
 
 
 class City(CityBase):

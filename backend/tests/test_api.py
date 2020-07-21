@@ -25,7 +25,6 @@ def payload():
         "avarage_income": 90.73,
         "state": "FakeState",
         "foundation_date": "2020-07-11",
-        "recaptcha": "",
     }
 
 
@@ -33,13 +32,11 @@ def payload():
 class TestCreateCity:
     def test_when_valid_returns_created(self, payload):
         response = client.post(build_url(), json=payload)
-
         assert response.status_code == 201
 
     def test_when_valid_returns_complete_body(self, payload):
         response = client.post(build_url(), json=payload)
         payload["id"] = "fakestate - fakecity"
-        payload.pop('recaptcha')
         assert response.json() == payload
 
     def test_when_valid_saves_on_db(self, payload, session_maker):
@@ -65,8 +62,7 @@ class TestCreateCity:
         assert response.json().get("detail") == "City already exist"
 
     def test_when_invalid_returns_invalid_post(self):
-        data = {"recaptcha": ""}
-        response = client.post(build_url(), json=data)
+        response = client.post(build_url(), json="")
 
         assert not response.ok
         assert response.json().get("detail") == "Invalid Post"
