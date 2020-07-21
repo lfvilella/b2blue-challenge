@@ -1,3 +1,5 @@
+const CAPTCHAKEY = '6LcALLQZAAAAANTajkVeaa1E5bJYejD_68_C1NgK';
+
 const statesBR = [
   { "nome": "Acre", "sigla": "AC" },
   { "nome": "Alagoas", "sigla": "AL" },
@@ -26,7 +28,7 @@ const statesBR = [
   { "nome": "São Paulo", "sigla": "SP" },
   { "nome": "Sergipe", "sigla": "SE" },
   { "nome": "Tocantins", "sigla": "TO" }
-]
+];
 
 
 const ptBR = {
@@ -59,7 +61,7 @@ const ptBR = {
     population: 'População',
     cityNotFound: 'Nenhuma Cidade Encontrada',
   }
-}
+};
 
 const enUS = {
   navBar: {
@@ -91,7 +93,7 @@ const enUS = {
     population: 'Population',
     cityNotFound: 'City Not Found',
   },
-}
+};
 
 
 Vue.use(VueI18n);
@@ -105,9 +107,9 @@ var app = new Vue({
     }
   }),
   el: '#app',
-  delimiters: ["[[", "]]"],
   created: function () {
     this.changeLocale(this.$i18n.locale);
+    this.initReCaptcha();
   },
   data: {
     states: statesBR,
@@ -182,7 +184,18 @@ var app = new Vue({
       this.formError = null;
       return;
     },
-
+    initReCaptcha: function() {
+      if(typeof grecaptcha === 'undefined') {
+        return setTimeout(() => this.initReCaptcha(), 100);
+      }
+      grecaptcha.ready(() => {
+        grecaptcha.render('recaptcha', {
+          sitekey: CAPTCHAKEY,
+          size: 'invisible',
+          callback: (token) => this.createCityPost(token)
+        });
+      });
+    },
     createCity: function (cityData) {
       this.setLoadingState(false);
       if (!this.cityData.name) {
@@ -205,10 +218,15 @@ var app = new Vue({
         this.formError = this.$t('formCityError.NoFoundation');
         return;
       }
+      grecaptcha.execute();
+    },
 
+    createCityPost: function (token) {
+      const cityData = this.cityData;
+      cityData['recaptcha'] = token;
       this.setLoadingState(true);
       axios.post('/api/v.1/city', cityData)
-      .then((response) => {
+        .then((response) => {
           this.searchCity(cityData.name);
           this.search = cityData.name;
           this.setLoadingState(false);

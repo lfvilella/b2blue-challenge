@@ -3,3 +3,6 @@ uvicorn==0.11.5
 pydantic-sqlalchemy==0.0.4
 redis==3.5.3
 python-redis-cache==1.1.1
+python-dotenv==0.14.0
+environs==8.0.0
+requests==2.24.0
