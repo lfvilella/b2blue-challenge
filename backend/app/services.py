@@ -4,11 +4,20 @@ This module is reponsible to handle all interactions to the database
  and bussiness rules
 """
 
-
 import typing
 
+import environs
+import dotenv
+import requests
 import sqlalchemy.orm
+
 from . import models, schemas, cache
+
+env = environs.Env()
+dotenv.load_dotenv()
+
+SECRET_KEY_RECAPTCHA = env("RECAPTCHA_SECRET_KEY", "")
+VALIDATE_RECAPTCHA = env.bool("VALIDATE_RECAPTCHA", True)
 
 
 class ServiceException(Exception):
@@ -47,9 +56,7 @@ class CityService:
         state.pop("_db")  # do not pickle _db session
         return state
 
-    def get_city_by_id(
-        self, name: str, state: str
-    ) -> models.City:
+    def get_city_by_id(self, name: str, state: str) -> models.City:
         """ Get City By ID
 
         This method is used to get City
@@ -68,7 +75,7 @@ class CityService:
 
         return db_city
 
-    def create_city(self, city: schemas.CityInput,) -> models.City:
+    def create_city(self, city: schemas.CityBase) -> models.City:
         """ Create City
 
         This method is used to create a City
@@ -121,3 +128,24 @@ class CityService:
             list of cities
         """
         return self.filter_city(name)
+
+
+class GoogleService:
+    _RECAPTCHA_SITEVERIFY_URL = (
+        "https://www.google.com/recaptcha/api/siteverify"
+    )
+
+    def validate_recaptcha(self, response_token: str) -> bool:
+        if not VALIDATE_RECAPTCHA:
+            return True
+
+        data = {
+            "response": response_token,
+            "secret": SECRET_KEY_RECAPTCHA,
+        }
+        response = requests.post(self._RECAPTCHA_SITEVERIFY_URL, data=data)
+
+        if response.json().get("success") is not True:
+            return False
+
+        return True

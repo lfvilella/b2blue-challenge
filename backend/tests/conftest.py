@@ -4,9 +4,18 @@ import pytest
 
 import app.models
 import app.database
+import app.services
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+
+@pytest.fixture
+def mock_google_recaptcha():
+    with unittest.mock.patch.object(
+        app.services.GoogleService, "validate_recaptcha", return_value=True
+    ):
+        yield None
 
 
 @pytest.fixture

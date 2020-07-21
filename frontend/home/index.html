@@ -29,7 +29,7 @@
   <div id="app">
     <ul class="nav bg-dark nav-pills nav-fill">
       <li class="nav-item">
-        <a class="nav-link active" href="#"><b>[[ $t("navBar.title") ]]</b></a>
+        <a class="nav-link active" href="#"><b>{{ $t("navBar.title") }}</b></a>
       </li>
 
       <li class="nav-item">
@@ -44,7 +44,8 @@
       </li>
 
       <li class="nav-item">
-        <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal" v-on:click="cleanFormData()">
+        <a style="cursor: pointer;" class="nav-link" data-toggle="modal" data-target="#exampleModal"
+          v-on:click="cleanFormData()">
           <i class="fas fa-plus"></i>
         </a>
 
@@ -53,58 +54,67 @@
           aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">[[ $t("form.title") ]]</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="input-group mb-3">
-                  <input type="text" class="form-control" :placeholder="$t('form.name')" aria-label="Cidade"
-                    aria-describedby="basic-addon1" v-model="cityData.name">
+              <div id="contactform" method="POST">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">{{ $t("form.title") }}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" :placeholder="$t('form.name')" aria-label="Cidade"
+                      name="cityName" aria-describedby="basic-addon1" v-model="cityData.name">
+                  </div>
 
-                <div class="input-group mb-3">
-                  <input type="number" min="0" step="1" class="form-control" :placeholder="[[ $t('form.population') ]]"
-                    aria-label="Populacao" aria-describedby="basic-addon1" v-model="cityData.population_count">
-                </div>
+                  <div class="input-group mb-3">
+                    <input type="number" min="0" step="1" class="form-control" :placeholder="$t('form.population')"
+                      name="cityPopulation" aria-label="Populacao" aria-describedby="basic-addon1"
+                      v-model="cityData.population_count">
+                  </div>
 
-                <div class="input-group mb-3">
-                  <input type="number" class="form-control" :placeholder="[[ $t('form.avarage') ]]" aria-label="Renda"
-                    aria-describedby="basic-addon1" v-model="cityData.avarage_income">
-                </div>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" :placeholder="$t('form.avarage')" aria-label="Renda"
+                      name="cityAvarageIncome" aria-describedby="basic-addon1" v-model="cityData.avarage_income">
+                  </div>
 
-                <h6 class="text-left">[[ $t('form.state') ]]:</h6>
-                <div class="input-group mb-3">
-                    <select class="custom-select" v-model="cityData.state" >
-                      <option :value="state.sigla" v-for="state in states">[[ state.nome ]]</option>
+                  <h6 class="text-left">{{ $t('form.state') }}:</h6>
+                  <div class="input-group mb-3">
+                    <select class="custom-select" v-model="cityData.state">
+                      <option :value="state.sigla" v-for="state in states">{{ state.nome }}</option>
                     </select>
+                  </div>
+
+                  <h6 class="text-left">{{ $t('form.foundation') }}:</h6>
+                  <div class="input-group mb-3">
+                    <input type="date" class="form-control" aria-label="Foundado" aria-describedby="basic-addon1"
+                      name="cityFoundation" v-model="cityData.foundation_date">
+                  </div>
+
                 </div>
 
-                <h6 class="text-left">[[ $t('form.foundation') ]]:</h6>
-                <div class="input-group mb-3">
-                  <input type="date" class="form-control" aria-label="Foundado"
-                    aria-describedby="basic-addon1" v-model="cityData.foundation_date">
+                <div v-if="formError" class="alert alert-danger" role="alert">
+                  {{ formError }}
                 </div>
-              </div>
 
-              <div v-if="formError" class="alert alert-danger" role="alert">
-                [[ formError ]]
-              </div>
+                <div v-if="citySuccessCreated" class="alert alert-success" role="alert">
+                  <p style="margin-bottom: 0px;">{{ $t('form.citySuccessCreated') }}</p>
+                </div>
 
-              <div v-if="citySuccessCreated" class="alert alert-success" role="alert">
-                <p style="margin-bottom: 0px;">[[ $t('form.citySuccessCreated') ]]</p>
-              </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('form.close') }}</button>
 
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">[[ $t('form.close') ]]</button>
-                <button v-if="!isLoading" type="button" class="btn btn-primary" v-on:click="createCity(cityData)">
-                  [[ $t('form.create') ]]</button>
-                <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                  [[ $t('form.creating') ]]...
-                </button>
+                  <button class="btn btn-primary" v-if="!isLoading"
+                    v-on:click="createCity(cityData)">{{ $t('form.create') }}</button>
+
+                  <button v-if="isLoading" class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    {{ $t('form.creating') }}...
+                  </button>
+
+                  <div id="recaptcha" class="g-recaptcha"></div>
+
+                </div>
               </div>
             </div>
           </div>
@@ -115,7 +125,8 @@
     <div class="container">
       <div class="row text-center">
         <div class="col-sm-12">
-          <div style="margin-bottom: 22px !important;" class="shadow p-3 mb-5 bg-white rounded"><b>[[ $t("labels.searchCity") ]]</b>
+          <div style="margin-bottom: 22px !important;" class="shadow p-3 mb-5 bg-white rounded"><b>{{
+              $t("labels.searchCity") }}</b>
           </div>
         </div>
 
@@ -129,13 +140,13 @@
               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             </button>
 
-            <input type="search" class="form-control" :placeholder="[[ $t('form.name') ]]" aria-label="Cidade"
+            <input type="search" class="form-control" :placeholder="$t('form.name')" aria-label="Cidade"
               aria-describedby="basic-addon1" v-model="search" @input="debouncedSearchCity(search)">
           </div>
         </div>
 
         <div v-if="cityNotFound" class="col-sm-12 text-center">
-          <p>[[ $t("labels.cityNotFound") ]].</p>
+          <p>{{ $t("labels.cityNotFound") }}.</p>
         </div>
       </div>
     </div>
@@ -147,12 +158,12 @@
             <div class="list-group" v-for="city in cityList">
               <div class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">[[ city.name ]]</h5>
+                  <h5 class="mb-1">{{ city.name }}</h5>
                 </div>
-                <p class="mb-1">[[ $t("labels.population") ]]: [[ $n(city.population_count) ]]</p>
-                <p class="mb-1">[[ $t("form.avarage") ]]: [[ $n(city.avarage_income) ]]</p>
-                <p class="mb-1">[[ $t("form.state") ]]: [[ city.state ]]</p>
-                <p class="mb-1">[[ $t("form.foundation") ]]: [[ $d(city.foundation_date) ]]</p>
+                <p class="mb-1">{{ $t("labels.population") }}: {{ $n(city.population_count) }}</p>
+                <p class="mb-1">{{ $t("form.avarage") }}: {{ $n(city.avarage_income) }}</p>
+                <p class="mb-1">{{ $t("form.state") }}: {{ city.state }}</p>
+                <p class="mb-1">{{ $t("form.foundation") }}: {{ $d(city.foundation_date) }}</p>
               </div>
             </div>
           </div>
@@ -174,6 +185,9 @@
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
     crossorigin="anonymous"></script>
 
+  <!-- Google Recaptcha -->
+  <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+
   <!-- VueJS Locale -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/pt-br.min.js"></script>
@@ -186,6 +200,7 @@
 
   <!-- Script.js -->
   <script src="/static/scripts.js"></script>
+
 </body>
 
 </html>

@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 
 from app import api
 from app import models
+from app import services
 
 
 client = TestClient(api.app)
@@ -29,6 +30,7 @@ def payload():
 
 
 @pytest.mark.usefixtures("use_db")
+@pytest.mark.usefixtures("mock_google_recaptcha")
 class TestCreateCity:
     def test_when_valid_returns_created(self, payload):
         response = client.post(build_url(), json=payload)
@@ -91,6 +93,7 @@ def create_db_city(payload, session_maker):
 
 
 @pytest.mark.usefixtures("use_db")
+@pytest.mark.usefixtures("mock_google_recaptcha")
 class TestFilterCity:
     def test_when_city_matches_returns_ok(self, create_db_city):
         create_db_city(name="Sao Paulo", state="SP")
@@ -134,3 +137,19 @@ class TestFilterCity:
 
         r_2 = client.get(build_url(name="City"))
         assert r_1.json() != r_2.json()
+
+
+@pytest.mark.usefixtures("use_db")
+class TestRobot:
+    def test_returns_bad_request(self, payload):
+        response = client.post(build_url(), json=payload)
+        assert response.status_code == 400
+
+    def test_returns_bot_message(self, payload):
+        response = client.post(build_url(), json=payload)
+        assert response.json() == {'detail': 'Hi robot!'}
+
+
+class TestGoogleService:
+    def test_validate_recaptcha(self):
+        assert not services.GoogleService().validate_recaptcha('')

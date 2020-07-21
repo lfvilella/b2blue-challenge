@@ -10,8 +10,7 @@ models.Base.metadata.create_all(bind=database.engine)
 _VERSION = "/api/v.1"
 
 app = fastapi.FastAPI(
-    openapi_url=_VERSION + "/openapi.json",
-    docs_url=_VERSION + "/docs",
+    openapi_url=_VERSION + "/openapi.json", docs_url=_VERSION + "/docs",
 )
 
 
@@ -41,8 +40,11 @@ def create_city(
     city: schemas.CityInput,
     db: sqlalchemy.orm.Session = fastapi.Depends(get_db),
 ):
+    if not services.GoogleService().validate_recaptcha(city.recaptcha):
+        raise fastapi.HTTPException(status_code=400, detail="Hi robot!")
+
     service = services.CityService(db)
-    return service.create_city(city=city)
+    return service.create_city(city=schemas.CityBase(**city.dict()))
 
 
 @app.get(
