@@ -159,5 +159,5 @@ class TestGoogleService:
         assert services.GoogleService().validate_recaptcha('')
 
     @unittest.mock.patch('app.services.VALIDATE_RECAPTCHA', False)
-    def test_validate_recaptcha_when_var_is_false_returns_true(self):
+    def test_when_captcha_validation_is_disabled_skips_the_validations(self):
         assert services.GoogleService().validate_recaptcha('')
