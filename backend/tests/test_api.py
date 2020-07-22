@@ -1,5 +1,6 @@
 import datetime
 
+import unittest.mock
 import pytest
 from fastapi.testclient import TestClient
 
@@ -151,5 +152,12 @@ class TestRobot:
 
 
 class TestGoogleService:
-    def test_validate_recaptcha(self):
+    def test_validate_recaptcha_returns_false(self):
         assert not services.GoogleService().validate_recaptcha('')
+
+    def test_validate_recaptcha_returns_true(self, mock_google_recaptcha):
+        assert services.GoogleService().validate_recaptcha('')
+
+    @unittest.mock.patch('app.services.VALIDATE_RECAPTCHA', False)
+    def test_validate_recaptcha_when_var_is_false_returns_true(self):
+        assert services.GoogleService().validate_recaptcha('')
