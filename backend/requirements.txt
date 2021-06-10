@@ -1,4 +1,4 @@
-fastapi==0.58.1
+fastapi==0.65.2
 uvicorn==0.11.7
 pydantic-sqlalchemy==0.0.4
 redis==3.5.3
